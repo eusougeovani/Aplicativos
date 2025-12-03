@@ -215,6 +215,19 @@
             
             <button class="sortear-btn" id="sortearBtn">SORTEAR</button>
         </div>
+        <!-- Lista de imagens - Adicione suas URLs aqui -->
+        <div id="imageList" style="display: none;">
+            <img src="https://i.imgur.com/469ckvz.png" alt="">
+            <img src="https://i.imgur.com/8U6lXEU.png" alt="">
+            <img src="https://i.imgur.com/WcdStjR.png" alt="">
+            <img src="https://i.imgur.com/GzEv3nR.png" alt="">
+            <img src="https://i.imgur.com/vshxF3T.png" alt="">
+            <img src="https://i.imgur.com/ggBq3K4.png" alt="">
+            <img src="https://i.imgur.com/s3XDUk8.png" alt="">
+            <img src="https://i.imgur.com/XVnZwv0.png" alt="">
+            <img src="https://i.imgur.com/ae68thK.png" alt="">
+            <img src="https://i.imgur.com/5ru9reb.png" alt="">
+        </div>
     </main>
 
     <footer>
@@ -222,39 +235,48 @@
     </footer>
 
     <script>
-        const images = [
-            'https://drive.google.com/uc?export=view&id=1ywE9A5D3ipvt1ic7q3eKgnb5G8pAMiDt',
-            'https://drive.google.com/uc?export=view&id=185rxjCICHoHmrg1BePV3ZheG_4ONK2g4'
-        ];
-
         const imageContainer = document.getElementById('imageContainer');
         const sortearBtn = document.getElementById('sortearBtn');
         const placeholder = document.querySelector('.placeholder');
+        
+        // Pega todas as imagens da lista no HTML
+        const imageList = document.getElementById('imageList');
+        const images = Array.from(imageList.querySelectorAll('img')).map(img => img.src);
 
         sortearBtn.addEventListener('click', () => {
+            // Desabilita o botão durante a animação
             sortearBtn.disabled = true;
 
+            // Remove placeholder se existir
             if (placeholder) {
                 placeholder.remove();
             }
 
+            // Adiciona animação
             imageContainer.classList.add('spinning');
 
+            // Após a animação, mostra a imagem sorteada
             setTimeout(() => {
+                // Remove imagem anterior se houver
                 const oldImg = imageContainer.querySelector('img.active');
                 if (oldImg) {
                     oldImg.classList.remove('active');
                 }
 
+                // Sorteia uma imagem aleatória
                 const randomIndex = Math.floor(Math.random() * images.length);
                 const randomImage = images[randomIndex];
 
+                // Cria nova imagem
                 const img = document.createElement('img');
                 img.src = randomImage;
                 img.classList.add('active');
                 imageContainer.appendChild(img);
 
+                // Remove a animação
                 imageContainer.classList.remove('spinning');
+
+                // Reabilita o botão
                 sortearBtn.disabled = false;
             }, 500);
         });
