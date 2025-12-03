@@ -41,9 +41,6 @@
       font-weight: 600;
       font-size: 0.9rem;
       transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 5px;
     }
 
     .home-btn:hover {
@@ -118,25 +115,38 @@
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(4, 60px);
       gap: 10px;
       justify-content: center;
       margin-top: 20px;
     }
 
+    .grid-3x3 {
+      grid-template-columns: repeat(3, 80px);
+    }
+
+    .grid-4x4 {
+      grid-template-columns: repeat(4, 60px);
+    }
+
     .cell {
-      width: 60px;
-      height: 60px;
+      width: 80px;
+      height: 80px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
+      font-size: 32px;
       background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
       cursor: pointer;
       border-radius: 10px;
       transition: all 0.3s ease;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       font-weight: bold;
+    }
+
+    .cell-small {
+      width: 60px;
+      height: 60px;
+      font-size: 24px;
     }
 
     .cell:hover {
@@ -232,12 +242,21 @@
         padding: 20px;
       }
 
-      .grid {
+      .grid-3x3 {
+        grid-template-columns: repeat(3, 70px);
+      }
+
+      .grid-4x4 {
         grid-template-columns: repeat(4, 50px);
-        gap: 8px;
       }
 
       .cell {
+        width: 70px;
+        height: 70px;
+        font-size: 28px;
+      }
+
+      .cell-small {
         width: 50px;
         height: 50px;
         font-size: 20px;
@@ -282,6 +301,8 @@
         <option value="ppt">Pedra-Papel-Tesoura</option>
         <option value="memoria">Jogo da Memória</option>
         <option value="simon">Simon Game</option>
+        <option value="quiz">Quiz de Conhecimentos</option>
+        <option value="snake">Snake (Cobrinha)</option>
       </select>
       <button onclick="reiniciarJogo()">Reiniciar</button>
     </div>
@@ -300,18 +321,34 @@
 
     const jogos = {
       velha() {
-        state = { current: 'X', board: Array(9).fill(null) };
+        state = { current: 'X', board: Array(9).fill(null), winner: null };
         scoreboard.textContent = 'Vez do jogador X';
-        container.innerHTML = '<div class="grid" id="velha-grid"></div>';
+        container.innerHTML = '<div class="grid grid-3x3" id="velha-grid"></div>';
         const grid = document.getElementById('velha-grid');
         for (let i = 0; i < 9; i++) {
           const cell = document.createElement('div');
           cell.className = 'cell';
           cell.addEventListener('click', () => {
-            if (!state.board[i]) {
+            if (!state.board[i] && !state.winner) {
               state.board[i] = state.current;
               cell.textContent = state.current;
               cell.style.color = state.current === 'X' ? '#667eea' : '#764ba2';
+              
+              const linhas = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+              for (let linha of linhas) {
+                const [a,b,c] = linha;
+                if (state.board[a] && state.board[a] === state.board[b] && state.board[a] === state.board[c]) {
+                  state.winner = state.board[a];
+                  scoreboard.textContent = `🎉 Jogador ${state.winner} venceu!`;
+                  return;
+                }
+              }
+              
+              if (!state.board.includes(null)) {
+                scoreboard.textContent = '🤝 Empate!';
+                return;
+              }
+              
               state.current = state.current === 'X' ? 'O' : 'X';
               scoreboard.textContent = 'Vez do jogador ' + state.current;
             }
@@ -321,33 +358,45 @@
       },
       
       forca() {
-        const palavras = ['banana', 'cachorro', 'escola', 'teclado', 'computador', 'javascript'];
+        const palavras = ['banana', 'cachorro', 'escola', 'teclado', 'computador', 'javascript', 'programar', 'internet'];
         const palavra = palavras[Math.floor(Math.random() * palavras.length)];
-        let erros = 0;
-        let acertos = Array(palavra.length).fill('_');
-        state = { palavra, erros, acertos };
+        state = { palavra, erros: 0, acertos: Array(palavra.length).fill('_'), letrasUsadas: [] };
         scoreboard.textContent = 'Erros: 0 / 6';
-        container.innerHTML = '<p style="font-size: 2rem; letter-spacing: 10px; text-align: center;">' + acertos.join(' ') + '</p><input id="forca-input" maxlength="1" placeholder="Digite uma letra">';
+        container.innerHTML = '<p style="font-size: 2rem; letter-spacing: 10px; text-align: center;">' + state.acertos.join(' ') + '</p><input id="forca-input" maxlength="1" placeholder="Digite uma letra"><p id="letras-usadas" style="text-align: center; color: #999; font-size: 0.9rem;"></p>';
         document.getElementById('forca-input').addEventListener('input', e => {
           const letra = e.target.value.toLowerCase();
+          if (!letra || state.letrasUsadas.includes(letra)) {
+            e.target.value = '';
+            return;
+          }
+          
+          state.letrasUsadas.push(letra);
           let mudou = false;
-          for (let i = 0; i < palavra.length; i++) {
-            if (palavra[i] === letra) {
+          for (let i = 0; i < state.palavra.length; i++) {
+            if (state.palavra[i] === letra) {
               state.acertos[i] = letra;
               mudou = true;
             }
           }
+          
           if (!mudou) state.erros++;
+          
           scoreboard.textContent = 'Erros: ' + state.erros + ' / 6';
           container.querySelector('p').textContent = state.acertos.join(' ');
+          document.getElementById('letras-usadas').textContent = 'Letras usadas: ' + state.letrasUsadas.join(', ');
           e.target.value = '';
+          
           if (state.erros >= 6) {
-            alert('Você perdeu! A palavra era: ' + palavra);
-            jogos.forca();
+            setTimeout(() => {
+              alert('Você perdeu! A palavra era: ' + state.palavra);
+              jogos.forca();
+            }, 100);
           }
           if (!state.acertos.includes('_')) {
-            alert('Parabéns! Você ganhou!');
-            jogos.forca();
+            setTimeout(() => {
+              alert('Parabéns! Você ganhou!');
+              jogos.forca();
+            }, 100);
           }
         });
       },
@@ -359,6 +408,8 @@
         container.innerHTML = '<p>Adivinhe um número entre 1 e 100</p><input id="numero-input" type="number" placeholder="Digite um número"><button onclick="verificarNumero()">Verificar</button><p id="resultado"></p>';
         window.verificarNumero = () => {
           const palpite = parseInt(document.getElementById('numero-input').value);
+          if (isNaN(palpite)) return;
+          
           state.tentativas++;
           const resultado = document.getElementById('resultado');
           if (palpite === state.alvo) {
@@ -390,6 +441,7 @@
           
           if (escolha === cpu) {
             resultado.textContent = `Empate! Ambos escolheram ${opcoes[escolha]}`;
+            resultado.style.color = '#333';
           } else if ((escolha === 0 && cpu === 2) || (escolha === 1 && cpu === 0) || (escolha === 2 && cpu === 1)) {
             state.player++;
             resultado.textContent = `Você ganhou! ${opcoes[escolha]} vence ${opcoes[cpu]}`;
@@ -408,32 +460,39 @@
         let cards = emojis.concat(emojis).sort(() => 0.5 - Math.random());
         state = { flipped: [], matched: 0 };
         scoreboard.textContent = 'Pares encontrados: 0 / 8';
-        container.innerHTML = '<div class="grid" id="memoria-grid"></div>';
+        container.innerHTML = '<div class="grid grid-4x4" id="memoria-grid"></div>';
         const grid = document.getElementById('memoria-grid');
-        cards.forEach((em, idx) => {
+        cards.forEach((em) => {
           const div = document.createElement('div');
-          div.className = 'cell';
+          div.className = 'cell cell-small';
           div.dataset.valor = em;
           div.addEventListener('click', () => flipMemoria(div));
           grid.appendChild(div);
         });
         
         window.flipMemoria = (div) => {
-          if (state.flipped.length < 2 && !div.textContent) {
+          if (state.flipped.length < 2 && !div.textContent && !div.classList.contains('matched')) {
             div.textContent = div.dataset.valor;
             state.flipped.push(div);
+            
             if (state.flipped.length === 2) {
               const [a, b] = state.flipped;
               if (a.dataset.valor === b.dataset.valor) {
                 state.matched++;
+                a.classList.add('matched');
+                b.classList.add('matched');
                 scoreboard.textContent = 'Pares encontrados: ' + state.matched + ' / 8';
+                state.flipped = [];
                 if (state.matched === 8) {
                   setTimeout(() => alert('Parabéns! Você completou o jogo!'), 300);
                 }
               } else {
-                setTimeout(() => { a.textContent = ''; b.textContent = ''; }, 1000);
+                setTimeout(() => { 
+                  a.textContent = ''; 
+                  b.textContent = ''; 
+                  state.flipped = [];
+                }, 1000);
               }
-              state.flipped = [];
             }
           }
         };
@@ -441,7 +500,7 @@
 
       simon() {
         const cores = ['red', 'green', 'blue', 'yellow'];
-        state = { sequencia: [], resposta: [], botoes: {} };
+        state = { sequencia: [], resposta: [], botoes: {}, aguardando: false };
         scoreboard.textContent = 'Sequência: 0';
         container.innerHTML = '<div class="simon-container" id="simon-container"></div>';
         const div = document.getElementById('simon-container');
@@ -454,10 +513,133 @@
           state.botoes[cor] = btn;
         });
         novaRodadaSimon();
+      },
+
+      quiz() {
+        const perguntas = [
+          { q: 'Qual é a capital do Brasil?', r: ['Brasília', 'São Paulo', 'Rio de Janeiro', 'Salvador'], c: 0 },
+          { q: 'Quanto é 7 x 8?', r: ['54', '56', '64', '48'], c: 1 },
+          { q: 'Qual o maior planeta do sistema solar?', r: ['Terra', 'Marte', 'Júpiter', 'Saturno'], c: 2 },
+          { q: 'Em que ano o Brasil foi descoberto?', r: ['1492', '1500', '1822', '1889'], c: 1 },
+          { q: 'Qual é o oceano mais profundo?', r: ['Atlântico', 'Índico', 'Ártico', 'Pacífico'], c: 3 },
+          { q: 'Quantos continentes existem?', r: ['5', '6', '7', '8'], c: 2 },
+          { q: 'Qual o menor país do mundo?', r: ['Mônaco', 'Vaticano', 'San Marino', 'Liechtenstein'], c: 1 }
+        ];
+        state = { perguntas, atual: 0, pontos: 0 };
+        scoreboard.textContent = `Pontos: 0 / ${perguntas.length}`;
+        mostrarPergunta();
+        
+        window.responderQuiz = (idx) => {
+          if (idx === state.perguntas[state.atual].c) {
+            state.pontos++;
+            scoreboard.textContent = `Pontos: ${state.pontos} / ${state.perguntas.length}`;
+          }
+          state.atual++;
+          if (state.atual < state.perguntas.length) {
+            mostrarPergunta();
+          } else {
+            container.innerHTML = `<p style="text-align: center; font-size: 1.5rem; color: #667eea;">🎉 Fim do Quiz!<br><br>Você acertou ${state.pontos} de ${state.perguntas.length}</p>`;
+          }
+        };
+      },
+
+      snake() {
+        const tamanho = 20;
+        const largura = 15;
+        const altura = 15;
+        state = { 
+          cobra: [{x: 7, y: 7}], 
+          direcao: {x: 1, y: 0},
+          proximaDirecao: {x: 1, y: 0},
+          comida: {x: 10, y: 10},
+          pontos: 0,
+          jogando: true,
+          loop: null
+        };
+        scoreboard.textContent = 'Pontos: 0';
+        container.innerHTML = '<canvas id="snake-canvas" width="300" height="300" style="border: 2px solid #667eea; border-radius: 10px; background: #f8f9fa;"></canvas><p style="text-align: center; margin-top: 10px; color: #666;">Use as setas do teclado para jogar</p>';
+        const canvas = document.getElementById('snake-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        const teclaHandler = (e) => {
+          if (!state.jogando) return;
+          const teclas = { 
+            ArrowUp: {x:0,y:-1}, 
+            ArrowDown: {x:0,y:1}, 
+            ArrowLeft: {x:-1,y:0}, 
+            ArrowRight: {x:1,y:0} 
+          };
+          
+          if (teclas[e.key]) {
+            e.preventDefault();
+            const novaDirecao = teclas[e.key];
+            if (!(novaDirecao.x === -state.direcao.x && novaDirecao.y === -state.direcao.y)) {
+              state.proximaDirecao = novaDirecao;
+            }
+          }
+        };
+        
+        document.addEventListener('keydown', teclaHandler);
+        
+        state.loop = setInterval(() => {
+          if (!state.jogando) {
+            clearInterval(state.loop);
+            document.removeEventListener('keydown', teclaHandler);
+            return;
+          }
+          
+          state.direcao = state.proximaDirecao;
+          const cabeca = { 
+            x: state.cobra[0].x + state.direcao.x, 
+            y: state.cobra[0].y + state.direcao.y 
+          };
+          
+          if (cabeca.x < 0 || cabeca.x >= largura || cabeca.y < 0 || cabeca.y >= altura || 
+              state.cobra.some(s => s.x === cabeca.x && s.y === cabeca.y)) {
+            state.jogando = false;
+            alert(`Game Over! Pontos: ${state.pontos}`);
+            return;
+          }
+          
+          state.cobra.unshift(cabeca);
+          
+          if (cabeca.x === state.comida.x && cabeca.y === state.comida.y) {
+            state.pontos++;
+            scoreboard.textContent = `Pontos: ${state.pontos}`;
+            
+            let novaComida;
+            do {
+              novaComida = { 
+                x: Math.floor(Math.random() * largura), 
+                y: Math.floor(Math.random() * altura) 
+              };
+            } while (state.cobra.some(s => s.x === novaComida.x && s.y === novaComida.y));
+            state.comida = novaComida;
+          } else {
+            state.cobra.pop();
+          }
+          
+          ctx.fillStyle = '#f8f9fa';
+          ctx.fillRect(0, 0, 300, 300);
+          
+          ctx.fillStyle = '#667eea';
+          state.cobra.forEach((s, i) => {
+            if (i === 0) {
+              ctx.fillStyle = '#764ba2';
+            } else {
+              ctx.fillStyle = '#667eea';
+            }
+            ctx.fillRect(s.x * tamanho, s.y * tamanho, tamanho - 2, tamanho - 2);
+          });
+          
+          ctx.fillStyle = '#e74c3c';
+          ctx.fillRect(state.comida.x * tamanho, state.comida.y * tamanho, tamanho - 2, tamanho - 2);
+        }, 150);
       }
     };
 
     function novaRodadaSimon() {
+      state.aguardando = true;
       const cores = ['red', 'green', 'blue', 'yellow'];
       const nova = cores[Math.floor(Math.random() * 4)];
       state.sequencia.push(nova);
@@ -469,16 +651,22 @@
     function mostrarSequencia() {
       let i = 0;
       const interval = setInterval(() => {
-        const cor = state.sequencia[i];
-        const btn = state.botoes[cor];
-        btn.style.opacity = '0.5';
-        setTimeout(() => { btn.style.opacity = '1'; }, 400);
-        i++;
-        if (i >= state.sequencia.length) clearInterval(interval);
+        if (i < state.sequencia.length) {
+          const cor = state.sequencia[i];
+          const btn = state.botoes[cor];
+          btn.style.opacity = '0.5';
+          setTimeout(() => { btn.style.opacity = '1'; }, 400);
+          i++;
+        } else {
+          clearInterval(interval);
+          state.aguardando = false;
+        }
       }, 800);
     }
 
     function cliqueSimon(cor) {
+      if (state.aguardando || state.resposta.length === 0) return;
+      
       if (cor === state.resposta[0]) {
         state.resposta.shift();
         if (state.resposta.length === 0) {
@@ -490,8 +678,20 @@
       }
     }
 
+    function mostrarPergunta() {
+      const p = state.perguntas[state.atual];
+      container.innerHTML = `
+        <p style="font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; text-align: center;">${state.atual + 1}. ${p.q}</p>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          ${p.r.map((r, i) => `<button onclick="responderQuiz(${i})" style="text-align: left; padding: 15px;">${r}</button>`).join('')}
+        </div>
+      `;
+    }
+
     document.getElementById('game-select').addEventListener('change', (e) => {
       const jogo = e.target.value;
+      if (state.loop) clearInterval(state.loop);
+      
       if (jogos[jogo]) {
         jogos[jogo]();
       } else {
@@ -502,6 +702,8 @@
 
     function reiniciarJogo() {
       const jogoAtual = document.getElementById('game-select').value;
+      if (state.loop) clearInterval(state.loop);
+      
       if (jogos[jogoAtual]) {
         jogos[jogoAtual]();
       }
