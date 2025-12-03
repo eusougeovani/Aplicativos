@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Teste de Pureza - GeoCODE</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      color: #333;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .home-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      padding: 8px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .home-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    header h1 {
+      font-size: clamp(1.2rem, 4vw, 1.6rem);
+      font-weight: bold;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+    }
+
+    #question {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      margin-bottom: 25px;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .buttons button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 14px 30px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+      min-width: 100px;
+    }
+
+    .buttons button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .buttons button:active {
+      transform: translateY(-1px);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #result-box h2 {
+      font-size: clamp(1.8rem, 5vw, 2.5rem);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 15px;
+    }
+
+    #result-box p {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      margin-bottom: 25px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    #start-box p {
+      font-size: clamp(1rem, 2.5vw, 1.1rem);
+      margin-bottom: 25px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    #start-box button, #result-box button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 14px 30px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+    }
+
+    #start-box button:hover, #result-box button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    footer {
+      background: rgba(0, 0, 0, 0.2);
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9rem;
+      backdrop-filter: blur(10px);
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: opacity 0.3s;
+    }
+
+    footer a:hover {
+      opacity: 0.8;
+    }
+
+    @media (max-width: 500px) {
+      .container {
+        padding: 25px 20px;
+      }
+
+      header {
+        padding: 12px 15px;
+      }
+
+      .home-btn {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+      }
+
+      .buttons {
+        gap: 10px;
+      }
+
+      .buttons button {
+        padding: 12px 25px;
+        font-size: 0.95rem;
+      }
+
+      footer {
+        font-size: 0.8rem;
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="./index.html" class="home-btn">← Home</a>
+    <h1>😇 Teste de Pureza 😈</h1>
+    <div style="width: 80px;"></div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div id="start-box">
+        <p>Você está pronto(a) para medir sua pureza? Responda a 100 perguntas de sim ou não. Quanto maior sua pontuação, mais puro(a) você é!</p>
+        <button onclick="iniciarTeste()">Iniciar Teste</button>
+      </div>
+
+      <div id="quiz-box" class="hidden">
+        <p id="question"></p>
+        <div class="buttons">
+          <button onclick="responder(true)">Sim</button>
+          <button onclick="responder(false)">Não</button>
+        </div>
+      </div>
+
+      <div id="result-box" class="hidden">
+        <h2 id="result-text"></h2>
+        <p id="result-comment"></p>
+        <button onclick="reiniciar()">Refazer Teste</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    © 2025 Geovani Santos • Instagram: <a href="https://instagram.com/eusougeovani" target="_blank">@eusougeovani</a>
+  </footer>
+
+  <script>
+    const perguntas = [
+      "Você já mandou nudes para alguém?",
+      "Já teve relações sexuais no carro?",
+      "Já transou no banheiro público?",
+      "Já fez sexo no primeiro encontro?",
+      "Já beijou duas pessoas no mesmo dia?",
+      "Já fez sexo sem saber o nome da pessoa?",
+      "Já usou algemas ou vendas durante o sexo?",
+      "Já teve um sonho erótico com um(a) amigo(a)?",
+      "Já se masturbou pensando em alguém conhecido?",
+      "Já assistiu pornografia com outra pessoa?",
+      "Já participou de uma chamada de vídeo sexual?",
+      "Já fingiu prazer?",
+      "Já transou com alguém comprometido?",
+      "Já transou em local público?",
+      "Já enviou mensagens picantes?",
+      "Já fez sexting com desconhecidos?",
+      "Já usou brinquedos sexuais?",
+      "Já teve mais de um parceiro(a) em 24h?",
+      "Já fez striptease?",
+      "Já transou ouvindo funk pesado?",
+      "Já teve um caso com colega de trabalho?",
+      "Já viu alguém pelado sem querer?",
+      "Já se masturbou em um lugar inusitado?",
+      "Já teve desejo por um(a) professor(a)?",
+      "Já ficou com alguém bem mais velho?",
+      "Já ficou com alguém bem mais novo?",
+      "Já usou aplicativos de encontros?",
+      "Já ficou com alguém do mesmo gênero?",
+      "Já beijou alguém só por diversão?",
+      "Já mandou áudio gemendo?",
+      "Já fez cosplay sexual?",
+      "Já deu uma rapidinha em local estranho?",
+      "Já assistiu filmes adultos no trabalho/escola?",
+      "Já transou bêbado(a)?",
+      "Já fantasiou com famoso(a)?",
+      "Já fez sexo virtual?",
+      "Já teve sexo casual?",
+      "Já beijou um(a) ex?",
+      "Já sentiu ciúmes de um crush aleatório?",
+      "Já desejou um(a) amigo(a) comprometido(a)?",
+      "Já beijou alguém em uma balada?",
+      "Já mandou mensagem bêbado(a)?",
+      "Já gravou vídeos íntimos?",
+      "Já fez chamada de vídeo pelado(a)?",
+      "Já mentiu sobre sua experiência sexual?",
+      "Já fingiu estar dormindo para evitar algo sexual?",
+      "Já provocou alguém só por diversão?",
+      "Já desejou o(a) parceiro(a) de um amigo(a)?",
+      "Já teve um encontro só pelo sexo?",
+      "Já transou sem camisinha?",
+      "Já flertou com desconhecido(a) na rua?",
+      "Já acordou com desejo incontrolável?",
+      "Já teve crush em professor(a)?",
+      "Já usou comida em momento íntimo?",
+      "Já foi pego em momento íntimo?",
+      "Já desejou um(a) influencer?",
+      "Já foi a um motel?",
+      "Já sentiu tesão em filme que não era erótico?",
+      "Já transou ouvindo uma playlist preparada?",
+      "Já praticou dominação ou submissão?",
+      "Já fantasiou em público?",
+      "Já teve desejo por colega de classe?",
+      "Já viu vídeo íntimo vazado?",
+      "Já se imaginou em um trisal?",
+      "Já ficou com alguém só por vingança?",
+      "Já flertou sabendo que a pessoa era comprometida?",
+      "Já usou roupas íntimas para impressionar?",
+      "Já desejou alguém da sua família distante?",
+      "Já se masturbou ouvindo apenas a voz de alguém?",
+      "Já mandou fotos sem roupa por impulso?",
+      "Já fez sexo com música alta?",
+      "Já transou ao ar livre?",
+      "Já teve sexo dentro da água?",
+      "Já ficou nu(a) com amigos(as)?",
+      "Já recebeu cantada no trabalho?",
+      "Já retribuiu cantada no transporte público?",
+      "Já leu contos eróticos?",
+      "Já teve um perfil falso em apps de pegação?",
+      "Já ficou com um(a) ex de um(a) amigo(a)?",
+      "Já provocou alguém intencionalmente com roupas?",
+      "Já experimentou algo novo só por curiosidade sexual?",
+      "Já usou espelho durante o sexo?",
+      "Já foi em festa com clima sexual?",
+      "Já teve atração por superior(a) hierárquico?",
+      "Já foi filmado durante o sexo (com consentimento)?",
+      "Já experimentou roleplay?",
+      "Já transou escondido(a)?",
+      "Já teve fantasias proibidas?",
+      "Já transou na casa dos pais escondido(a)?",
+      "Já sentiu atração por uma figura pública religiosa?",
+      "Já teve fetiches inusitados?",
+      "Já ficou excitado(a) em situações impróprias?",
+      "Já provocou alguém pela internet?",
+      "Já respondeu testes como esse antes?",
+      "Já ficou excitado(a) lendo esse teste?",
+      "Já teve o desejo de ir além de um beijo com um(a) amigo(a)?",
+      "Já beijou alguém imaginando outra pessoa?",
+      "Já quis transar só por curiosidade?",
+      "Já pensou em alguém durante o banho?",
+      "Já se pegou fantasiando durante a aula/trabalho?",
+      "Já sentiu culpa por desejos sexuais?",
+      "Já teve pensamentos safados sem motivo?",
+      "Já desejou que alguém te dominasse ou obedecesse?"
+    ];
+
+    let atual = 0;
+    let pontuacao = 0;
+
+    const perguntaEl = document.getElementById("question");
+    const quizBox = document.getElementById("quiz-box");
+    const startBox = document.getElementById("start-box");
+    const resultBox = document.getElementById("result-box");
+    const resultText = document.getElementById("result-text");
+    const resultComment = document.getElementById("result-comment");
+
+    function iniciarTeste() {
+      startBox.classList.add("hidden");
+      quizBox.classList.remove("hidden");
+      carregarPergunta();
+    }
+
+    function carregarPergunta() {
+      if (atual < perguntas.length) {
+        perguntaEl.textContent = perguntas[atual];
+      } else {
+        mostrarResultado();
+      }
+    }
+
+    function responder(sim) {
+      if (sim) pontuacao += 1;
+      atual++;
+      carregarPergunta();
+    }
+
+    function mostrarResultado() {
+      quizBox.classList.add("hidden");
+      resultBox.classList.remove("hidden");
+
+      const resultadoFinal = Math.round((pontuacao / perguntas.length) * 100);
+      resultText.textContent = `Seu nível de pureza é ${resultadoFinal}/100`;
+
+      if (resultadoFinal >= 80) {
+        resultComment.textContent = "😇 Um verdadeiro(a) santo(a)! Puro como água mineral.";
+      } else if (resultadoFinal >= 50) {
+        resultComment.textContent = "😌 Tem seus momentos, mas mantém a elegância!";
+      } else if (resultadoFinal >= 20) {
+        resultComment.textContent = "🔥 Perigo! Um(a) verdadeiro(a) pecador(a)!";
+      } else {
+        resultComment.textContent = "😈 Pureza? Essa palavra nem existe no seu dicionário!";
+      }
+    }
+
+    function reiniciar() {
+      atual = 0;
+      pontuacao = 0;
+      resultBox.classList.add("hidden");
+      quizBox.classList.add("hidden");
+      startBox.classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>

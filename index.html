@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoCODE - Projetos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        header h1 {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        header p {
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            opacity: 0.95;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-decoration: none;
+            color: inherit;
+            aspect-ratio: 1;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.2);
+        }
+
+        .project-card:active {
+            transform: translateY(-2px);
+        }
+
+        .project-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .project-icon img {
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .project-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-align: center;
+            color: #333;
+            word-break: break-word;
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: opacity 0.3s;
+        }
+
+        footer a:hover {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 480px) {
+            .projects-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 15px;
+            }
+
+            .project-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 25px;
+            }
+
+            .project-name {
+                font-size: 0.85rem;
+            }
+
+            footer {
+                font-size: 0.8rem;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>GeoCODE - Projetos</h1>
+            <p>Selecione um projeto para visualizar</p>
+        </header>
+
+        <div class="projects-grid" id="projectsGrid"></div>
+    </div>
+
+    <footer>
+        © 2025 Geovani Santos • Instagram: <a href="https://instagram.com/eusougeovani" target="_blank">@eusougeovani</a>
+    </footer>
+
+    <script>
+        const projects = [
+            {
+                name: "Kama Sutra",
+                url: "./loveapp.html",
+                icon: "❤️"
+            },
+            {
+                name: "Sorteador Loteria",
+                url: "./sorteloteria.html",
+                icon: "🎲"
+            },
+            {
+                name: "Teste de Pureza",
+                url: "./testepureza.html",
+                icon: "💧"
+            }
+        ];
+
+        function renderProjects() {
+            const grid = document.getElementById('projectsGrid');
+            grid.innerHTML = '';
+
+            projects.forEach(project => {
+                const card = document.createElement('a');
+                card.className = 'project-card';
+                card.href = project.url;
+                
+                const icon = document.createElement('div');
+                icon.className = 'project-icon';
+                
+                if (project.icon.startsWith('http') || project.icon.startsWith('./')) {
+                    const img = document.createElement('img');
+                    img.src = project.icon;
+                    img.alt = project.name;
+                    icon.appendChild(img);
+                } else {
+                    icon.textContent = project.icon;
+                }
+                
+                const name = document.createElement('div');
+                name.className = 'project-name';
+                name.textContent = project.name;
+                
+                card.appendChild(icon);
+                card.appendChild(name);
+                grid.appendChild(card);
+            });
+        }
+
+        renderProjects();
+    </script>
+</body>
+</html>
