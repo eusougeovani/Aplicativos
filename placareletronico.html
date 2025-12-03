@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Placar Eletrônico - GeoCODE</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .home-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      padding: 8px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .home-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    header h1 {
+      font-size: clamp(1.2rem, 4vw, 1.6rem);
+      font-weight: bold;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .input-times input {
+      padding: 12px;
+      margin: 10px 5px;
+      width: calc(50% - 10px);
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .input-times input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .input-times button {
+      padding: 14px 30px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      margin-top: 10px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+    }
+
+    .input-times button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .placar {
+      display: none;
+      justify-content: space-around;
+      align-items: stretch;
+      margin-bottom: 30px;
+      gap: 20px;
+    }
+
+    .time {
+      flex: 1;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .time h2 {
+      font-size: clamp(1.2rem, 3vw, 1.5rem);
+      margin-bottom: 15px;
+      color: #667eea;
+    }
+
+    .pontos {
+      font-size: clamp(3rem, 8vw, 4rem);
+      font-weight: bold;
+      margin: 20px 0;
+      color: #764ba2;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .botoes button {
+      padding: 12px 20px;
+      font-size: 1.2rem;
+      margin: 5px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+      min-width: 60px;
+    }
+
+    .botoes button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .botoes button:active {
+      transform: translateY(0);
+    }
+
+    .zerar-btn {
+      background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%) !important;
+      margin-top: 20px;
+      padding: 14px 30px;
+      font-size: 1rem;
+    }
+
+    footer {
+      background: rgba(0, 0, 0, 0.2);
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9rem;
+      backdrop-filter: blur(10px);
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: opacity 0.3s;
+    }
+
+    footer a:hover {
+      opacity: 0.8;
+    }
+
+    @media (max-width: 600px) {
+      .placar {
+        flex-direction: column;
+      }
+
+      .input-times input {
+        width: 100%;
+        margin: 5px 0;
+      }
+
+      .container {
+        padding: 25px 20px;
+      }
+
+      header {
+        padding: 12px 15px;
+      }
+
+      .home-btn {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+      }
+
+      footer {
+        font-size: 0.8rem;
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="./index.html" class="home-btn">← Home</a>
+    <h1>🏆 Placar Eletrônico</h1>
+    <div style="width: 80px;"></div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="input-times">
+        <input type="text" id="nomeA" placeholder="Nome do Time A">
+        <input type="text" id="nomeB" placeholder="Nome do Time B">
+        <br>
+        <button onclick="iniciarPlacar()">Iniciar Placar</button>
+      </div>
+
+      <div class="placar" id="placarBox">
+        <div class="time" id="timeA">
+          <h2 id="labelA">Time A</h2>
+          <div class="pontos" id="pontosA">0</div>
+          <div class="botoes">
+            <button onclick="alterarPontos('A', 1)">+1</button>
+            <button onclick="alterarPontos('A', -1)">-1</button>
+          </div>
+        </div>
+        <div class="time" id="timeB">
+          <h2 id="labelB">Time B</h2>
+          <div class="pontos" id="pontosB">0</div>
+          <div class="botoes">
+            <button onclick="alterarPontos('B', 1)">+1</button>
+            <button onclick="alterarPontos('B', -1)">-1</button>
+          </div>
+        </div>
+      </div>
+      <button class="zerar-btn" onclick="zerarPlacar()">Zerar Placar</button>
+    </div>
+  </main>
+
+  <footer>
+    © 2025 Geovani Santos • Instagram: <a href="https://instagram.com/eusougeovani" target="_blank">@eusougeovani</a>
+  </footer>
+
+  <script>
+    let placar = { A: 0, B: 0 };
+
+    function iniciarPlacar() {
+      const nomeA = document.getElementById("nomeA").value.trim();
+      const nomeB = document.getElementById("nomeB").value.trim();
+
+      if (nomeA && nomeB) {
+        document.getElementById("labelA").textContent = nomeA;
+        document.getElementById("labelB").textContent = nomeB;
+        document.querySelector(".input-times").style.display = "none";
+        document.getElementById("placarBox").style.display = "flex";
+      } else {
+        alert("Por favor, preencha o nome dos dois times.");
+      }
+    }
+
+    function alterarPontos(time, valor) {
+      placar[time] += valor;
+      if (placar[time] < 0) placar[time] = 0;
+      document.getElementById(`pontos${time}`).textContent = placar[time];
+    }
+
+    function zerarPlacar() {
+      placar = { A: 0, B: 0 };
+      document.getElementById("pontosA").textContent = 0;
+      document.getElementById("pontosB").textContent = 0;
+    }
+  </script>
+</body>
+</html>

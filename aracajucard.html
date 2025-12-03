@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AracajuCard - GeoCODE</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .home-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      padding: 8px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .home-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    header h1 {
+      font-size: clamp(1.2rem, 4vw, 1.6rem);
+      font-weight: bold;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      max-width: 450px;
+      width: 100%;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: 600;
+      text-align: left;
+      color: #333;
+      font-size: 1rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    button {
+      margin-top: 25px;
+      padding: 14px 30px;
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    button:active {
+      transform: translateY(-1px);
+    }
+
+    .resultado {
+      margin-top: 25px;
+      padding: 20px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      font-size: 1rem;
+      text-align: left;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      display: none;
+    }
+
+    .resultado.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .resultado p {
+      margin: 10px 0;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .resultado strong {
+      color: #667eea;
+    }
+
+    footer {
+      background: rgba(0, 0, 0, 0.2);
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9rem;
+      backdrop-filter: blur(10px);
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: opacity 0.3s;
+    }
+
+    footer a:hover {
+      opacity: 0.8;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 25px 20px;
+      }
+
+      header {
+        padding: 12px 15px;
+      }
+
+      .home-btn {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+      }
+
+      button {
+        font-size: 0.95rem;
+      }
+
+      footer {
+        font-size: 0.8rem;
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="./index.html" class="home-btn">← Home</a>
+    <h1>🃏 AracajuCard</h1>
+    <div style="width: 80px;"></div>
+  </header>
+
+  <main>
+    <div class="container">
+      <label for="valorPassagem">Valor da passagem (R$):</label>
+      <input type="number" id="valorPassagem" step="0.01" placeholder="Ex: 4.50">
+
+      <label for="valorDisponivel">Valor que você tem (R$):</label>
+      <input type="number" id="valorDisponivel" step="0.01" placeholder="Ex: 20.00">
+
+      <button onclick="calcular()">Calcular</button>
+
+      <div class="resultado" id="resultado"></div>
+    </div>
+  </main>
+
+  <footer>
+    © 2025 Geovani Santos • Instagram: <a href="https://instagram.com/eusougeovani" target="_blank">@eusougeovani</a>
+  </footer>
+
+  <script>
+    function calcular() {
+      const valorPassagem = parseFloat(document.getElementById("valorPassagem").value);
+      const valorDisponivel = parseFloat(document.getElementById("valorDisponivel").value);
+      const resultadoDiv = document.getElementById("resultado");
+
+      if (isNaN(valorPassagem) || isNaN(valorDisponivel) || valorPassagem <= 0 || valorDisponivel < 0) {
+        resultadoDiv.innerHTML = "<p>Por favor, insira valores válidos.</p>";
+        resultadoDiv.classList.add("show");
+        return;
+      }
+
+      const quantidade = Math.floor(valorDisponivel / valorPassagem);
+      const valorGasto = quantidade * valorPassagem;
+      const sobra = valorDisponivel - valorGasto;
+
+      resultadoDiv.innerHTML = `
+        <p><strong>Passagens possíveis:</strong> ${quantidade}</p>
+        <p><strong>Valor total gasto:</strong> R$ ${valorGasto.toFixed(2)}</p>
+        <p><strong>Valor que sobra:</strong> R$ ${sobra.toFixed(2)}</p>
+      `;
+      resultadoDiv.classList.add("show");
+    }
+
+    // Permite calcular pressionando Enter
+    document.getElementById("valorDisponivel").addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        calcular();
+      }
+    });
+  </script>
+</body>
+</html>

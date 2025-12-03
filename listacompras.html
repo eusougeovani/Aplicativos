@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lista de Compras - GeoCODE</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .home-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      padding: 8px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .home-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    header h1 {
+      font-size: clamp(1.2rem, 4vw, 1.6rem);
+      font-weight: bold;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      max-width: 600px;
+      width: 100%;
+    }
+
+    input {
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 12px;
+      border: 2px solid #e0e0e0;
+      width: 100%;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 14px 30px;
+      margin-top: 10px;
+      border-radius: 12px;
+      width: 100%;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    button:active {
+      transform: translateY(-1px);
+    }
+
+    .produto {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      margin-top: 15px;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .produto strong {
+      flex: 1;
+      font-size: 1.1rem;
+      color: #333;
+    }
+
+    .controle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .controle button {
+      padding: 8px 12px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      width: auto;
+      margin: 0;
+      min-width: 40px;
+      transition: all 0.3s ease;
+    }
+
+    .controle button:nth-child(1),
+    .controle button:nth-child(3) {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);
+    }
+
+    .controle button:nth-child(4) {
+      background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+      color: white;
+      box-shadow: 0 2px 6px rgba(231, 76, 60, 0.3);
+    }
+
+    .controle button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .controle span {
+      min-width: 30px;
+      text-align: center;
+      font-weight: 600;
+      color: #667eea;
+      font-size: 1.1rem;
+    }
+
+    #itens-lista {
+      margin-top: 20px;
+    }
+
+    footer {
+      background: rgba(0, 0, 0, 0.2);
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9rem;
+      backdrop-filter: blur(10px);
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: opacity 0.3s;
+    }
+
+    footer a:hover {
+      opacity: 0.8;
+    }
+
+    @media (max-width: 500px) {
+      .produto {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .controle {
+        align-self: flex-end;
+      }
+
+      .container {
+        padding: 25px 20px;
+      }
+
+      header {
+        padding: 12px 15px;
+      }
+
+      .home-btn {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+      }
+
+      footer {
+        font-size: 0.8rem;
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="./index.html" class="home-btn">← Home</a>
+    <h1>🛒 Lista de Compras</h1>
+    <div style="width: 80px;"></div>
+  </header>
+
+  <main>
+    <div class="container">
+      <input type="text" id="produto" placeholder="Digite o nome do produto" />
+      <button onclick="adicionarProduto()">Adicionar Produto</button>
+      <div id="itens-lista"></div>
+    </div>
+  </main>
+
+  <footer>
+    © 2025 Geovani Santos • Instagram: <a href="https://instagram.com/eusougeovani" target="_blank">@eusougeovani</a>
+  </footer>
+
+  <script>
+    let produtos = [];
+
+    function atualizarLista() {
+      const lista = document.getElementById("itens-lista");
+      lista.innerHTML = "";
+      produtos.forEach((produto, index) => {
+        const div = document.createElement("div");
+        div.className = "produto";
+        div.innerHTML = `
+          <strong>${produto.nome}</strong>
+          <div class="controle">
+            <button onclick="diminuirQuantidade(${index})">-</button>
+            <span>${produto.quantidade}</span>
+            <button onclick="aumentarQuantidade(${index})">+</button>
+            <button onclick="removerProduto(${index})">×</button>
+          </div>
+        `;
+        lista.appendChild(div);
+      });
+    }
+
+    function adicionarProduto() {
+      const nome = document.getElementById("produto").value.trim();
+      if (nome) {
+        const existente = produtos.find(p => p.nome.toLowerCase() === nome.toLowerCase());
+        if (existente) {
+          existente.quantidade++;
+        } else {
+          produtos.push({ nome, quantidade: 1 });
+        }
+        document.getElementById("produto").value = "";
+        atualizarLista();
+      }
+    }
+
+    function aumentarQuantidade(index) {
+      produtos[index].quantidade++;
+      atualizarLista();
+    }
+
+    function diminuirQuantidade(index) {
+      produtos[index].quantidade--;
+      if (produtos[index].quantidade <= 0) {
+        removerProduto(index);
+      } else {
+        atualizarLista();
+      }
+    }
+
+    function removerProduto(index) {
+      produtos.splice(index, 1);
+      atualizarLista();
+    }
+
+    // Permite adicionar produto pressionando Enter
+    document.getElementById("produto").addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        adicionarProduto();
+      }
+    });
+  </script>
+</body>
+</html>

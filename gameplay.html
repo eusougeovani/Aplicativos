@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GamePlay - GeoCODE</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .home-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      padding: 8px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .home-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    header h1 {
+      font-size: clamp(1.2rem, 4vw, 1.6rem);
+      font-weight: bold;
+    }
+
+    main {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-y: auto;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    select, .controls button {
+      padding: 12px 20px;
+      font-size: 1rem;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    select:focus, .controls button:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+      outline: none;
+    }
+
+    select option {
+      background: #667eea;
+      color: white;
+    }
+
+    #game-container {
+      margin-top: 20px;
+      width: 100%;
+      max-width: 600px;
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      min-height: 300px;
+    }
+
+    .scoreboard {
+      margin-top: 15px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #667eea;
+      text-align: center;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 60px);
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .cell {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      cursor: pointer;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      font-weight: bold;
+    }
+
+    .cell:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+    }
+
+    .simon-btn {
+      width: 120px;
+      height: 120px;
+      margin: 10px;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .simon-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .simon-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    #game-container input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      font-size: 1rem;
+    }
+
+    #game-container input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #game-container button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      margin: 5px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+    }
+
+    #game-container button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    #game-container p {
+      margin: 15px 0;
+      font-size: 1.1rem;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    footer {
+      background: rgba(0, 0, 0, 0.2);
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9rem;
+      backdrop-filter: blur(10px);
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: opacity 0.3s;
+    }
+
+    footer a:hover {
+      opacity: 0.8;
+    }
+
+    @media (max-width: 600px) {
+      #game-container {
+        padding: 20px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(4, 50px);
+        gap: 8px;
+      }
+
+      .cell {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+      }
+
+      .simon-btn {
+        width: 100px;
+        height: 100px;
+        margin: 8px;
+      }
+
+      header {
+        padding: 12px 15px;
+      }
+
+      .home-btn {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+      }
+
+      footer {
+        font-size: 0.8rem;
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="./index.html" class="home-btn">← Home</a>
+    <h1>🎮 GamePlay</h1>
+    <div style="width: 80px;"></div>
+  </header>
+
+  <main>
+    <div class="controls">
+      <select id="game-select">
+        <option value="">Selecione um jogo</option>
+        <option value="velha">Jogo da Velha</option>
+        <option value="forca">Forca</option>
+        <option value="numero">Adivinhe o Número</option>
+        <option value="ppt">Pedra-Papel-Tesoura</option>
+        <option value="memoria">Jogo da Memória</option>
+        <option value="simon">Simon Game</option>
+      </select>
+      <button onclick="reiniciarJogo()">Reiniciar</button>
+    </div>
+    <div id="game-container"></div>
+    <div class="scoreboard" id="scoreboard"></div>
+  </main>
+
+  <footer>
+    © 2025 Geovani Santos • Instagram: <a href="https://instagram.com/eusougeovani" target="_blank">@eusougeovani</a>
+  </footer>
+
+  <script>
+    const container = document.getElementById('game-container');
+    const scoreboard = document.getElementById('scoreboard');
+    let state = {};
+
+    const jogos = {
+      velha() {
+        state = { current: 'X', board: Array(9).fill(null) };
+        scoreboard.textContent = 'Vez do jogador X';
+        container.innerHTML = '<div class="grid" id="velha-grid"></div>';
+        const grid = document.getElementById('velha-grid');
+        for (let i = 0; i < 9; i++) {
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          cell.addEventListener('click', () => {
+            if (!state.board[i]) {
+              state.board[i] = state.current;
+              cell.textContent = state.current;
+              cell.style.color = state.current === 'X' ? '#667eea' : '#764ba2';
+              state.current = state.current === 'X' ? 'O' : 'X';
+              scoreboard.textContent = 'Vez do jogador ' + state.current;
+            }
+          });
+          grid.appendChild(cell);
+        }
+      },
+      
+      forca() {
+        const palavras = ['banana', 'cachorro', 'escola', 'teclado', 'computador', 'javascript'];
+        const palavra = palavras[Math.floor(Math.random() * palavras.length)];
+        let erros = 0;
+        let acertos = Array(palavra.length).fill('_');
+        state = { palavra, erros, acertos };
+        scoreboard.textContent = 'Erros: 0 / 6';
+        container.innerHTML = '<p style="font-size: 2rem; letter-spacing: 10px; text-align: center;">' + acertos.join(' ') + '</p><input id="forca-input" maxlength="1" placeholder="Digite uma letra">';
+        document.getElementById('forca-input').addEventListener('input', e => {
+          const letra = e.target.value.toLowerCase();
+          let mudou = false;
+          for (let i = 0; i < palavra.length; i++) {
+            if (palavra[i] === letra) {
+              state.acertos[i] = letra;
+              mudou = true;
+            }
+          }
+          if (!mudou) state.erros++;
+          scoreboard.textContent = 'Erros: ' + state.erros + ' / 6';
+          container.querySelector('p').textContent = state.acertos.join(' ');
+          e.target.value = '';
+          if (state.erros >= 6) {
+            alert('Você perdeu! A palavra era: ' + palavra);
+            jogos.forca();
+          }
+          if (!state.acertos.includes('_')) {
+            alert('Parabéns! Você ganhou!');
+            jogos.forca();
+          }
+        });
+      },
+
+      numero() {
+        const alvo = Math.floor(Math.random() * 100) + 1;
+        state = { alvo, tentativas: 0 };
+        scoreboard.textContent = 'Tentativas: 0';
+        container.innerHTML = '<p>Adivinhe um número entre 1 e 100</p><input id="numero-input" type="number" placeholder="Digite um número"><button onclick="verificarNumero()">Verificar</button><p id="resultado"></p>';
+        window.verificarNumero = () => {
+          const palpite = parseInt(document.getElementById('numero-input').value);
+          state.tentativas++;
+          const resultado = document.getElementById('resultado');
+          if (palpite === state.alvo) {
+            resultado.textContent = '🎉 Parabéns! Você acertou!';
+            resultado.style.color = '#27ae60';
+          } else if (palpite < state.alvo) {
+            resultado.textContent = '⬆️ Muito baixo! Tente novamente.';
+            resultado.style.color = '#667eea';
+          } else {
+            resultado.textContent = '⬇️ Muito alto! Tente novamente.';
+            resultado.style.color = '#764ba2';
+          }
+          scoreboard.textContent = 'Tentativas: ' + state.tentativas;
+          document.getElementById('numero-input').value = '';
+        };
+      },
+
+      ppt() {
+        state = { player: 0, cpu: 0 };
+        scoreboard.textContent = 'Você: 0 - Computador: 0';
+        container.innerHTML = '<div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">' + 
+          ['🪨 Pedra', '📄 Papel', '✂️ Tesoura'].map((j, idx) => 
+            `<button onclick="jogarPPT(${idx})">${j}</button>`
+          ).join('') + '</div><p id="ppt-resultado" style="text-align: center; font-size: 1.2rem; margin-top: 20px;"></p>';
+        window.jogarPPT = (escolha) => {
+          const opcoes = ['Pedra', 'Papel', 'Tesoura'];
+          const cpu = Math.floor(Math.random() * 3);
+          const resultado = document.getElementById('ppt-resultado');
+          
+          if (escolha === cpu) {
+            resultado.textContent = `Empate! Ambos escolheram ${opcoes[escolha]}`;
+          } else if ((escolha === 0 && cpu === 2) || (escolha === 1 && cpu === 0) || (escolha === 2 && cpu === 1)) {
+            state.player++;
+            resultado.textContent = `Você ganhou! ${opcoes[escolha]} vence ${opcoes[cpu]}`;
+            resultado.style.color = '#27ae60';
+          } else {
+            state.cpu++;
+            resultado.textContent = `Você perdeu! ${opcoes[cpu]} vence ${opcoes[escolha]}`;
+            resultado.style.color = '#e74c3c';
+          }
+          scoreboard.textContent = `Você: ${state.player} - Computador: ${state.cpu}`;
+        };
+      },
+
+      memoria() {
+        const emojis = ['🇧🇷','🇫🇷','🇯🇵','🇨🇦','🇩🇪','🇮🇹','🇪🇸','🇬🇧'];
+        let cards = emojis.concat(emojis).sort(() => 0.5 - Math.random());
+        state = { flipped: [], matched: 0 };
+        scoreboard.textContent = 'Pares encontrados: 0 / 8';
+        container.innerHTML = '<div class="grid" id="memoria-grid"></div>';
+        const grid = document.getElementById('memoria-grid');
+        cards.forEach((em, idx) => {
+          const div = document.createElement('div');
+          div.className = 'cell';
+          div.dataset.valor = em;
+          div.addEventListener('click', () => flipMemoria(div));
+          grid.appendChild(div);
+        });
+        
+        window.flipMemoria = (div) => {
+          if (state.flipped.length < 2 && !div.textContent) {
+            div.textContent = div.dataset.valor;
+            state.flipped.push(div);
+            if (state.flipped.length === 2) {
+              const [a, b] = state.flipped;
+              if (a.dataset.valor === b.dataset.valor) {
+                state.matched++;
+                scoreboard.textContent = 'Pares encontrados: ' + state.matched + ' / 8';
+                if (state.matched === 8) {
+                  setTimeout(() => alert('Parabéns! Você completou o jogo!'), 300);
+                }
+              } else {
+                setTimeout(() => { a.textContent = ''; b.textContent = ''; }, 1000);
+              }
+              state.flipped = [];
+            }
+          }
+        };
+      },
+
+      simon() {
+        const cores = ['red', 'green', 'blue', 'yellow'];
+        state = { sequencia: [], resposta: [], botoes: {} };
+        scoreboard.textContent = 'Sequência: 0';
+        container.innerHTML = '<div class="simon-container" id="simon-container"></div>';
+        const div = document.getElementById('simon-container');
+        cores.forEach(cor => {
+          const btn = document.createElement('button');
+          btn.className = 'simon-btn';
+          btn.style.background = cor;
+          btn.onclick = () => cliqueSimon(cor);
+          div.appendChild(btn);
+          state.botoes[cor] = btn;
+        });
+        novaRodadaSimon();
+      }
+    };
+
+    function novaRodadaSimon() {
+      const cores = ['red', 'green', 'blue', 'yellow'];
+      const nova = cores[Math.floor(Math.random() * 4)];
+      state.sequencia.push(nova);
+      state.resposta = [...state.sequencia];
+      scoreboard.textContent = 'Sequência: ' + state.sequencia.length;
+      mostrarSequencia();
+    }
+
+    function mostrarSequencia() {
+      let i = 0;
+      const interval = setInterval(() => {
+        const cor = state.sequencia[i];
+        const btn = state.botoes[cor];
+        btn.style.opacity = '0.5';
+        setTimeout(() => { btn.style.opacity = '1'; }, 400);
+        i++;
+        if (i >= state.sequencia.length) clearInterval(interval);
+      }, 800);
+    }
+
+    function cliqueSimon(cor) {
+      if (cor === state.resposta[0]) {
+        state.resposta.shift();
+        if (state.resposta.length === 0) {
+          setTimeout(novaRodadaSimon, 1000);
+        }
+      } else {
+        alert('Errou! Sua sequência: ' + state.sequencia.length);
+        jogos.simon();
+      }
+    }
+
+    document.getElementById('game-select').addEventListener('change', (e) => {
+      const jogo = e.target.value;
+      if (jogos[jogo]) {
+        jogos[jogo]();
+      } else {
+        container.innerHTML = '<p style="text-align: center; color: #999;">Selecione um jogo para começar</p>';
+        scoreboard.textContent = '';
+      }
+    });
+
+    function reiniciarJogo() {
+      const jogoAtual = document.getElementById('game-select').value;
+      if (jogos[jogoAtual]) {
+        jogos[jogoAtual]();
+      }
+    }
+  </script>
+</body>
+</html>
