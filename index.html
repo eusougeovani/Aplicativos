@@ -1,255 +1,433 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GeoCODE - Projetos</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeoCODE Hub</title>
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+  <!-- ═══════════════════════════════════════════
+       PWA — Meta Tags Essenciais
+  ═══════════════════════════════════════════ -->
+  <meta name="description" content="Hub de mini WebApps desenvolvidos por GeoCODE Programmer">
+  <meta name="theme-color" content="#667eea">
 
-        .container {
-            flex: 1;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            width: 100%;
-        }
+  <!-- Manifest PWA -->
+  <link rel="manifest" href="./manifest.json">
 
-        header {
-            text-align: center;
-            color: white;
-            margin-bottom: 40px;
-            padding-top: 20px;
-        }
+  <!-- ═══════════════════════════════════════════
+       PWA — iOS / Safari (Apple)
+  ═══════════════════════════════════════════ -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="GeoCODE Hub">
+  <!-- Substitua pelos caminhos reais dos seus ícones -->
+  <link rel="apple-touch-icon" sizes="152x152" href="./icons/icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="./icons/icon-192x192.png">
 
-        header h1 {
-            font-size: clamp(1.8rem, 5vw, 2.5rem);
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-        }
+  <!-- ═══════════════════════════════════════════
+       PWA — Android / Chrome (Open Graph opcional)
+  ═══════════════════════════════════════════ -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="GeoCODE Hub">
 
-        header p {
-            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
-            opacity: 0.95;
-        }
+  <!-- Favicon fallback -->
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192x192.png">
 
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 20px;
-            padding: 10px;
-            margin-bottom: 20px;
-        }
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        .project-card {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            text-decoration: none;
-            color: inherit;
-            aspect-ratio: 1;
-        }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      /* Evita bounce scroll no iOS que pode atrapalhar a experiência PWA */
+      overscroll-behavior: none;
+      display: flex;
+      flex-direction: column;
+    }
 
-        .project-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 12px rgba(0,0,0,0.2);
-        }
+    /* ─── Header ─────────────────────────────── */
+    header {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: white;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+      /* Garante que o header fique abaixo do notch em iPhones com PWA standalone */
+      padding-top: max(14px, env(safe-area-inset-top));
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
 
-        .project-card:active {
-            transform: translateY(-2px);
-        }
+    header h1 {
+      font-size: clamp(1.1rem, 4vw, 1.5rem);
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
 
-        .project-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 30px;
-            font-weight: bold;
-        }
+    header .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-        .project-icon img {
-            width: 100%;
-            height: 100%;
-            border-radius: 12px;
-            object-fit: cover;
-        }
+    /* ─── Botão "Instalar App" ───────────────── */
+    /* Oculto por padrão; aparece via JS quando o evento beforeinstallprompt dispara */
+    #install-btn {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      background: white;
+      color: #667eea;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      /* Mínimo 44px de altura para área de toque confortável no mobile */
+      min-height: 44px;
+      white-space: nowrap;
+    }
 
-        .project-name {
-            font-size: 0.95rem;
-            font-weight: 600;
-            text-align: center;
-            color: #333;
-            word-break: break-word;
-        }
+    #install-btn.visible {
+      display: flex;
+    }
 
-        footer {
-            background: rgba(0, 0, 0, 0.2);
-            color: white;
-            text-align: center;
-            padding: 20px;
-            font-size: 0.9rem;
-            backdrop-filter: blur(10px);
-        }
+    #install-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
 
-        footer a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            transition: opacity 0.3s;
-        }
+    #install-btn:active {
+      transform: scale(0.97);
+    }
 
-        footer a:hover {
-            opacity: 0.8;
-        }
+    #install-btn svg {
+      flex-shrink: 0;
+    }
 
-        @media (max-width: 480px) {
-            .projects-grid {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-                gap: 15px;
-            }
+    /* ─── Toast de confirmação de instalação ─── */
+    #install-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #1a1a2e;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      z-index: 9999;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      pointer-events: none;
+      white-space: nowrap;
+    }
 
-            .project-icon {
-                width: 50px;
-                height: 50px;
-                font-size: 25px;
-            }
+    #install-toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
 
-            .project-name {
-                font-size: 0.85rem;
-            }
+    /* ─── Main / Grid ────────────────────────── */
+    .container {
+      flex: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      width: 100%;
+    }
 
-            footer {
-                font-size: 0.8rem;
-                padding: 15px;
-            }
-        }
-    </style>
+    .section-title {
+      color: white;
+      font-size: clamp(1rem, 3vw, 1.15rem);
+      font-weight: 600;
+      opacity: 0.9;
+      margin-bottom: 16px;
+      text-align: center;
+      letter-spacing: 0.3px;
+    }
+
+    .projects-grid {
+      display: grid;
+      /* Mínimo de 140px garante 2 colunas mesmo em telas de 320px */
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 16px;
+      padding: 4px 2px;
+      margin-bottom: 20px;
+    }
+
+    .project-card {
+      background: white;
+      border-radius: 20px;
+      padding: 18px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      text-decoration: none;
+      color: inherit;
+      aspect-ratio: 1;
+      /* Garante que o card inteiro seja área de toque */
+      -webkit-tap-highlight-color: rgba(102, 126, 234, 0.15);
+      touch-action: manipulation;
+    }
+
+    .project-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+    }
+
+    .project-card:active {
+      transform: scale(0.96);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
+
+    .project-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .project-icon img {
+      width: 100%;
+      height: 100%;
+      border-radius: 14px;
+      object-fit: cover;
+    }
+
+    .project-name {
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-align: center;
+      color: #333;
+      word-break: break-word;
+      line-height: 1.3;
+    }
+
+    /* ─── Footer ─────────────────────────────── */
+    footer {
+      background: rgba(0, 0, 0, 0.2);
+      color: rgba(255, 255, 255, 0.85);
+      text-align: center;
+      padding: 18px 20px;
+      padding-bottom: max(18px, env(safe-area-inset-bottom));
+      font-size: 0.85rem;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+      transition: opacity 0.2s;
+    }
+
+    footer a:hover { opacity: 0.75; }
+
+    /* ─── Responsive ─────────────────────────── */
+    @media (max-width: 360px) {
+      .projects-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 12px;
+      }
+      .project-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 24px;
+      }
+      .project-name {
+        font-size: 0.82rem;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .projects-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 20px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>GeoCODE - Projetos</h1>
-            <p>Selecione um projeto para visualizar</p>
-        </header>
 
-        <div class="projects-grid" id="projectsGrid"></div>
+  <header>
+    <h1>⚡ GeoCODE Hub</h1>
+    <div class="header-right">
+      <!-- Botão personalizado de instalação PWA -->
+      <button id="install-btn" aria-label="Instalar aplicativo">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Instalar App
+      </button>
     </div>
+  </header>
 
-    <footer>
-        <p>&copy; <span id="anoAtual"></span> WebApp. Todos os Direitos Reservados.</p>
-        <p>Desenvolvido com <i class="fas fa-brain"></i> por <a href="https://eusougeovani.vercel.app/">GeoCODE Programmer</a></p>
-    </footer>
+  <div class="container">
+    <p class="section-title">Selecione um projeto para visualizar</p>
+    <div class="projects-grid" id="projectsGrid"></div>
+  </div>
 
-    <script>
-        // Seleciona o elemento onde o ano será exibido
-        const elementoAno = document.getElementById('anoAtual');
-        // Cria um objeto Date para obter a data e hora atuais
-        const data = new Date();
-        // Pega apenas o ano (getFullYear)
-        const anoAtual = data.getFullYear();
-        // Insere o ano no elemento HTML
-        elementoAno.innerHTML = anoAtual;
-        
-        const projects = [
-            {
-                name: "Kama Sutra",
-                url: "./loveapp.html",
-                icon: "🔥"
-            },
-            {
-                name: "Sorteador Loteria",
-                url: "./sorteloteria.html",
-                icon: "🎰"
-            },
-            {
-                name: "Teste de Pureza",
-                url: "./testepureza.html",
-                icon: "📊"
-            },
-            {
-                name: "AracajuCard",
-                url: "./aracajucard.html",
-                icon: "🚌"
-            },
-            {
-                name: "GamePlay",
-                url: "./gameplay.html",
-                icon: "🎮"
-            },
-            {
-                name: "Lista de Compras",
-                url: "./listacompras.html",
-                icon: "🛒"
-            },
-            {
-                name: "Placar Eletrônico",
-                url: "./placareletronico.html",
-                icon: "🏆"
-            },
-            {
-                name: "A Mansão Diabólica",
-                url: "./mansao_diabolica.html",
-                icon: "👹"
-            }
-        ];
+  <footer>
+    <p>&copy; <span id="anoAtual"></span> GeoCODE. Desenvolvido por
+      <a href="https://eusougeovani.vercel.app/" target="_blank" rel="noopener">GeoCODE Programmer</a>
+    </p>
+  </footer>
 
-        function renderProjects() {
-            const grid = document.getElementById('projectsGrid');
-            grid.innerHTML = '';
+  <!-- Toast de feedback pós-instalação -->
+  <div id="install-toast" role="status" aria-live="polite">✅ App adicionado à tela inicial!</div>
 
-            projects.forEach(project => {
-                const card = document.createElement('a');
-                card.className = 'project-card';
-                card.href = project.url;
-                
-                const icon = document.createElement('div');
-                icon.className = 'project-icon';
-                
-                if (project.icon.startsWith('http') || project.icon.startsWith('./')) {
-                    const img = document.createElement('img');
-                    img.src = project.icon;
-                    img.alt = project.name;
-                    icon.appendChild(img);
-                } else {
-                    icon.textContent = project.icon;
-                }
-                
-                const name = document.createElement('div');
-                name.className = 'project-name';
-                name.textContent = project.name;
-                
-                card.appendChild(icon);
-                card.appendChild(name);
-                grid.appendChild(card);
-            });
+  <script>
+    // ─── Ano no footer ────────────────────────
+    document.getElementById('anoAtual').textContent = new Date().getFullYear();
+
+    // ─── Projetos ─────────────────────────────
+    const projects = [
+      { name: "Kama Sutra",         url: "./loveapp.html",         icon: "🔥" },
+      { name: "Sorteador Loteria",  url: "./sorteloteria.html",    icon: "🎰" },
+      { name: "Teste de Pureza",    url: "./testepureza.html",     icon: "📊" },
+      { name: "AracajuCard",        url: "./aracajucard.html",     icon: "🚌" },
+      { name: "GamePlay",           url: "./gameplay.html",        icon: "🎮" },
+      { name: "Lista de Compras",   url: "./listacompras.html",    icon: "🛒" },
+      { name: "Placar Eletrônico",  url: "./placareletronico.html", icon: "🏆" },
+      { name: "A Mansão Diabólica", url: "./mansao_diabolica.html", icon: "👹" },
+    ];
+
+    function renderProjects() {
+      const grid = document.getElementById('projectsGrid');
+      grid.innerHTML = '';
+      projects.forEach(project => {
+        const card = document.createElement('a');
+        card.className = 'project-card';
+        card.href = project.url;
+
+        const icon = document.createElement('div');
+        icon.className = 'project-icon';
+
+        if (project.icon.startsWith('http') || project.icon.startsWith('./')) {
+          const img = document.createElement('img');
+          img.src = project.icon;
+          img.alt = project.name;
+          img.loading = 'lazy';
+          icon.appendChild(img);
+        } else {
+          icon.textContent = project.icon;
         }
 
-        renderProjects();
-    </script>
+        const name = document.createElement('div');
+        name.className = 'project-name';
+        name.textContent = project.name;
+
+        card.appendChild(icon);
+        card.appendChild(name);
+        grid.appendChild(card);
+      });
+    }
+
+    renderProjects();
+
+    // ══════════════════════════════════════════
+    // PWA — Registro do Service Worker
+    // Coloque este bloco sempre no final do HTML principal.
+    // ══════════════════════════════════════════
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker
+          .register('./sw.js', { scope: './' })
+          .then((registration) => {
+            console.log('[PWA] Service Worker registrado com sucesso. Escopo:', registration.scope);
+
+            // Verifica se há uma atualização disponível e notifica o usuário
+            registration.addEventListener('updatefound', () => {
+              const newWorker = registration.installing;
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  console.log('[PWA] Nova versão disponível! Recarregue para atualizar.');
+                  // Opcional: exibir um banner de "Nova versão disponível"
+                }
+              });
+            });
+          })
+          .catch((err) => {
+            console.error('[PWA] Falha ao registrar o Service Worker:', err);
+          });
+      });
+    }
+
+    // ══════════════════════════════════════════
+    // PWA — Botão "Instalar App" personalizado
+    // Captura o evento beforeinstallprompt para
+    // exibir nosso próprio botão no momento certo.
+    // ══════════════════════════════════════════
+    let deferredPrompt = null;
+    const installBtn = document.getElementById('install-btn');
+    const installToast = document.getElementById('install-toast');
+
+    // 1. Captura e segura o evento nativo (sem mostrar o prompt automaticamente)
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      // Torna o botão visível
+      installBtn.classList.add('visible');
+      console.log('[PWA] Pronto para instalar. Botão exibido.');
+    });
+
+    // 2. Ao clicar no nosso botão, dispara o prompt nativo
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log('[PWA] Escolha do usuário:', outcome);
+
+      if (outcome === 'accepted') {
+        showToast();
+      }
+
+      // O prompt só pode ser usado uma vez — descarta a referência
+      deferredPrompt = null;
+      installBtn.classList.remove('visible');
+    });
+
+    // 3. Esconde o botão se o app já foi instalado
+    window.addEventListener('appinstalled', () => {
+      installBtn.classList.remove('visible');
+      deferredPrompt = null;
+      showToast();
+      console.log('[PWA] App instalado com sucesso!');
+    });
+
+    function showToast() {
+      installToast.classList.add('show');
+      setTimeout(() => installToast.classList.remove('show'), 3500);
+    }
+  </script>
+
 </body>
 </html>
