@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeoCODE Design System — Guia de Uso</title>
+
+  <!-- ✅ PASSO 1: Importe o Design System ANTES de qualquer CSS próprio -->
+  <link rel="stylesheet" href="./global.css">
+
+  <!-- ✅ PASSO 2: CSS específico do projeto (sobrescreve apenas o necessário) -->
+  <style>
+    /* Exemplo de customização local sem quebrar o Design System */
+    .resultado {
+      padding: var(--space-5);
+      border-radius: var(--border-radius-md);
+      background: var(--bg-surface-alt);
+      border-left: 4px solid var(--clr-primary-500);
+      font-size: var(--text-md);
+      animation: fadeInUp var(--duration-slow) var(--ease-out-expo) both;
+    }
+
+    .resultado strong {
+      color: var(--clr-primary-600);
+    }
+
+    /* Demo grid de temas */
+    .themes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: var(--space-4);
+      margin: var(--space-6) 0;
+    }
+
+    .theme-chip {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-4);
+      border-radius: var(--border-radius-lg);
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform var(--duration-base) var(--ease-spring);
+      border: 2px solid var(--border-color);
+      background: var(--bg-surface);
+    }
+
+    .theme-chip:hover {
+      transform: translateY(-4px);
+      text-decoration: none;
+    }
+
+    .theme-swatch {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--border-radius-md);
+    }
+
+    .theme-chip span {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      color: var(--txt-body);
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Componentes de demo */
+    .demo-section {
+      margin-bottom: var(--space-10);
+    }
+
+    .demo-section h3 {
+      font-size: var(--text-lg);
+      margin-bottom: var(--space-4);
+      padding-bottom: var(--space-3);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .demo-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      align-items: center;
+      margin-bottom: var(--space-4);
+    }
+
+    main {
+      flex: 1;
+      padding: var(--space-6) var(--space-5);
+      overflow-y: auto;
+    }
+  </style>
+</head>
+
+<!--
+  ✅ PASSO 3: Aplique o data-theme="nome" na tag <body>.
+
+  MAPA DE TEMAS POR PROJETO:
+  ─────────────────────────────────────────────────
+  index.html            → (sem data-theme, usa o padrão GeoCODE)
+  aracajucard.html      → data-theme="financeiro"
+  gameplay.html         → data-theme="jogos"
+  loveapp.html          → data-theme="romance"
+  sorteloteria.html     → data-theme="sorte"
+  listacompras.html     → data-theme="ferramenta"
+  placareletronico.html → data-theme="ferramenta"
+  testepureza.html      → data-theme="quiz"
+  mansao_diabolica.html → data-theme="terror"
+  ─────────────────────────────────────────────────
+-->
+<body data-theme="ferramenta">
+<!-- Troque "ferramenta" por qualquer tema acima para ver a mudança instantânea -->
+
+  <header>
+    <a href="./index.html" class="btn btn--glass btn--sm">← Home</a>
+    <h1>🎨 Design System</h1>
+    <div style="width: 80px;"></div>
+  </header>
+
+  <main>
+    <div class="container container--wide">
+
+      <!-- ── Vitrine de Temas ─────────────────────────── -->
+      <div class="demo-section">
+        <h3>Temas Disponíveis</h3>
+        <p class="text-muted">Adicione <code>data-theme="nome"</code> na tag <code>&lt;body&gt;</code> para aplicar.</p>
+
+        <div class="themes-grid" style="margin-top: var(--space-5);">
+          <div class="theme-chip">
+            <div class="theme-swatch" style="background: linear-gradient(135deg, #667eea, #764ba2);"></div>
+            <span>Padrão<br>(sem tema)</span>
+          </div>
+          <div class="theme-chip">
+            <div class="theme-swatch" style="background: linear-gradient(135deg, #10b981, #0d9488);"></div>
+            <span>financeiro</span>
+          </div>
+          <div class="theme-chip">
+            <div class="theme-swatch" style="background: linear-gradient(135deg, #2563eb, #7c3aed);"></div>
+            <span>jogos</span>
+          </div>
+          <div class="theme-chip">
+            <div class="theme-swatch" style="background: linear-gradient(135deg, #e11d48, #db2777);"></div>
+            <span>romance</span>
+          </div>
+          <div class="theme-chip">
+            <div class="theme-swatch" style="background: linear-gradient(135deg, #d97706, #ea580c);"></div>
+            <span>sorte</span>
+          </div>
+          <div class="theme-chip">
+            <div class="theme-swatch" style="background: linear-gradient(135deg, #334155, #0284c7);"></div>
+            <span>ferramenta</span>
+          </div>
+          <div class="theme-chip">
+            <div class="theme-swatch" style="background: linear-gradient(135deg, #a21caf, #7e22ce);"></div>
+            <span>quiz</span>
+          </div>
+          <div class="theme-chip">
+            <div class="theme-swatch" style="background: linear-gradient(135deg, #cf000f, #1a0002);"></div>
+            <span>terror</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Botões ───────────────────────────────────── -->
+      <div class="demo-section card">
+        <h3>Botões</h3>
+        <div class="demo-row">
+          <button>Primário</button>
+          <button class="btn--outline">Outline</button>
+          <button class="btn--ghost">Ghost</button>
+          <button class="btn--danger">Perigo</button>
+          <button class="btn--success">Sucesso</button>
+        </div>
+        <div class="demo-row">
+          <button class="btn--sm">Pequeno</button>
+          <button>Médio (padrão)</button>
+          <button class="btn--lg">Grande</button>
+        </div>
+        <div class="demo-row">
+          <button disabled>Desabilitado</button>
+        </div>
+        <button class="btn--full" style="margin-top: var(--space-2);">Botão Full Width</button>
+      </div>
+
+      <!-- ── Formulários ──────────────────────────────── -->
+      <div class="demo-section card" style="margin-top: var(--space-6);">
+        <h3>Formulários</h3>
+
+        <div class="form-group">
+          <label for="demo-input">Input de texto</label>
+          <input type="text" id="demo-input" placeholder="Digite algo...">
+        </div>
+
+        <div class="form-group">
+          <label for="demo-number">Input numérico (ex: valor de passagem)</label>
+          <input type="number" id="demo-number" placeholder="Ex: 4.50" step="0.01">
+        </div>
+
+        <div class="form-group">
+          <label for="demo-select">Select</label>
+          <select id="demo-select">
+            <option value="">Selecione uma opção</option>
+            <option value="1">Mega-Sena</option>
+            <option value="2">Quina</option>
+            <option value="3">Lotofácil</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="demo-textarea">Textarea</label>
+          <textarea id="demo-textarea" placeholder="Anote aqui suas observações..."></textarea>
+        </div>
+
+        <!-- Estado de erro -->
+        <div class="form-group">
+          <label for="demo-error">Input com erro</label>
+          <input type="text" id="demo-error" class="input--error" value="Valor inválido">
+          <span class="form-error">⚠ Por favor, insira um valor válido.</span>
+        </div>
+
+        <button class="btn--full" style="margin-top: var(--space-4);">Enviar</button>
+      </div>
+
+      <!-- ── Cards ────────────────────────────────────── -->
+      <div class="demo-section" style="margin-top: var(--space-6);">
+        <h3>Cards</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--space-4);">
+          <div class="card">
+            <h4>Card Padrão</h4>
+            <p>Sombra média, fundo branco, radius grande.</p>
+          </div>
+          <div class="card card--elevated">
+            <h4>Elevado</h4>
+            <p>Sombra mais forte para destaque.</p>
+          </div>
+          <div class="card card--flat">
+            <h4>Flat</h4>
+            <p>Sem sombra, com borda sutil.</p>
+          </div>
+          <div class="card card--glass" style="color: var(--txt-inverse);">
+            <h4 style="color: var(--txt-inverse);">Glass</h4>
+            <p style="color: rgba(255,255,255,0.8);">Glassmorphism com blur.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Feedback / Alertas ──────────────────────── -->
+      <div class="demo-section" style="margin-top: var(--space-6);">
+        <h3>Estados de Feedback</h3>
+        <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+          <div class="alert alert--success">✅ Operação concluída com sucesso!</div>
+          <div class="alert alert--error">❌ Ocorreu um erro. Tente novamente.</div>
+          <div class="alert alert--warning">⚠️ Atenção: essa ação não pode ser desfeita.</div>
+          <div class="alert alert--info">ℹ️ Dica: você pode pressionar Enter para confirmar.</div>
+        </div>
+        <div class="demo-row" style="margin-top: var(--space-4);">
+          <span class="badge">Padrão</span>
+          <span class="badge badge--success">Sucesso</span>
+          <span class="badge badge--error">Erro</span>
+          <span class="badge badge--warning">Aviso</span>
+        </div>
+      </div>
+
+      <!-- ── Tipografia ────────────────────────────────── -->
+      <div class="demo-section card" style="margin-top: var(--space-6);">
+        <h3>Escala Tipográfica</h3>
+        <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+          <p style="font-size: var(--text-4xl); font-weight: var(--weight-bold); line-height: 1.1;">text-4xl — Título Hero</p>
+          <p style="font-size: var(--text-3xl); font-weight: var(--weight-bold);">text-3xl — Título Principal</p>
+          <p style="font-size: var(--text-2xl); font-weight: var(--weight-semibold);">text-2xl — Subtítulo</p>
+          <p style="font-size: var(--text-xl);">text-xl — Destaque</p>
+          <p style="font-size: var(--text-lg);">text-lg — Corpo grande</p>
+          <p style="font-size: var(--text-base);">text-base — Corpo padrão (16px)</p>
+          <p style="font-size: var(--text-sm);" class="text-muted">text-sm — Auxiliar / labels</p>
+          <p style="font-size: var(--text-xs);" class="text-muted">text-xs — Micro-texto</p>
+          <p>Texto com <strong>negrito semântico</strong>, <a href="#">link padrão</a> e <span class="text-brand font-bold">cor da marca</span>.</p>
+        </div>
+      </div>
+
+      <!-- ── Resultado (exemplo de uso real) ──────────── -->
+      <div class="demo-section" style="margin-top: var(--space-6);">
+        <h3>Exemplo: Resultado de Cálculo</h3>
+        <div class="resultado">
+          <p><strong>Passagens possíveis:</strong> 4</p>
+          <p><strong>Valor total gasto:</strong> R$ 18,00</p>
+          <p><strong>Valor que sobra:</strong> R$ 2,00</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 GeoCODE Programmer —
+      <a href="https://eusougeovani.vercel.app/" target="_blank" rel="noopener">eusougeovani.vercel.app</a>
+    </p>
+  </footer>
+
+</body>
+</html>
