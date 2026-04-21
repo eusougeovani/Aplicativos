@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,6 +40,23 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      /* Fundo e superfícies */
+      background: var(--bg-surface);
+      background: var(--gradient-brand);
+
+      /* Texto */
+      color: var(--txt-heading);
+      color: var(--txt-muted);
+
+      /* Botão/ação com sombra na cor do tema */
+      box-shadow: var(--shadow-primary);
+
+      /* Espaçamento consistente */
+      padding: var(--space-4);
+      gap: var(--space-3);
+
+      /* Focus ring no tema ativo */
+      box-shadow: var(--focus-ring);
     }
 
     body {
@@ -248,7 +266,9 @@
       transition: opacity 0.2s;
     }
 
-    footer a:hover { opacity: 0.75; }
+    footer a:hover {
+      opacity: 0.75;
+    }
 
     /* ─── Responsive ─────────────────────────── */
     @media (max-width: 360px) {
@@ -256,11 +276,13 @@
         grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
         gap: 12px;
       }
+
       .project-icon {
         width: 48px;
         height: 48px;
         font-size: 24px;
       }
+
       .project-name {
         font-size: 0.82rem;
       }
@@ -274,6 +296,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <header>
@@ -281,10 +304,11 @@
     <div class="header-right">
       <!-- Botão personalizado de instalação PWA -->
       <button id="install-btn" aria-label="Instalar aplicativo">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <polyline points="7 10 12 15 17 10" />
+          <line x1="12" y1="15" x2="12" y2="3" />
         </svg>
         Instalar App
       </button>
@@ -311,13 +335,13 @@
 
     // ─── Projetos ─────────────────────────────
     const projects = [
-      { name: "Kama Sutra",         url: "./loveapp.html",         icon: "🔥" },
-      { name: "Sorteador Loteria",  url: "./sorteloteria.html",    icon: "🎰" },
-      { name: "Teste de Pureza",    url: "./testepureza.html",     icon: "📊" },
-      { name: "AracajuCard",        url: "./aracajucard.html",     icon: "🚌" },
-      { name: "GamePlay",           url: "./gameplay.html",        icon: "🎮" },
-      { name: "Lista de Compras",   url: "./listacompras.html",    icon: "🛒" },
-      { name: "Placar Eletrônico",  url: "./placareletronico.html", icon: "🏆" },
+      { name: "Kama Sutra", url: "./loveapp.html", icon: "🔥" },
+      { name: "Sorteador Loteria", url: "./sorteloteria.html", icon: "🎰" },
+      { name: "Teste de Pureza", url: "./testepureza.html", icon: "📊" },
+      { name: "AracajuCard", url: "./aracajucard.html", icon: "🚌" },
+      { name: "GamePlay", url: "./gameplay.html", icon: "🎮" },
+      { name: "Lista de Compras", url: "./listacompras.html", icon: "🛒" },
+      { name: "Placar Eletrônico", url: "./placareletronico.html", icon: "🏆" },
       { name: "A Mansão Diabólica", url: "./mansao_diabolica.html", icon: "👹" },
     ];
 
@@ -431,4 +455,5 @@
   </script>
 
 </body>
+
 </html>

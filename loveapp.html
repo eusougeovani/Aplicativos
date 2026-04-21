@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,23 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            /* Fundo e superfícies */
+            background: var(--bg-surface);
+            background: var(--gradient-brand);
+
+            /* Texto */
+            color: var(--txt-heading);
+            color: var(--txt-muted);
+
+            /* Botão/ação com sombra na cor do tema */
+            box-shadow: var(--shadow-primary);
+
+            /* Espaçamento consistente */
+            padding: var(--space-4);
+            gap: var(--space-3);
+
+            /* Focus ring no tema ativo */
+            box-shadow: var(--focus-ring);
         }
 
         body {
@@ -29,7 +47,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .home-btn {
@@ -86,7 +104,7 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
         }
 
@@ -95,9 +113,17 @@
         }
 
         @keyframes spin {
-            0% { transform: scale(1) rotate(0deg); }
-            50% { transform: scale(0.9) rotate(180deg); }
-            100% { transform: scale(1) rotate(360deg); }
+            0% {
+                transform: scale(1) rotate(0deg);
+            }
+
+            50% {
+                transform: scale(0.9) rotate(180deg);
+            }
+
+            100% {
+                transform: scale(1) rotate(360deg);
+            }
         }
 
         .image-container img {
@@ -130,7 +156,7 @@
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
             letter-spacing: 2px;
         }
@@ -138,12 +164,12 @@
         .sortear-btn:hover {
             background: rgba(255, 255, 255, 0.95);
             transform: translateY(-3px);
-            box-shadow: 0 12px 25px rgba(0,0,0,0.25);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
         }
 
         .sortear-btn:active {
             transform: translateY(-1px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .sortear-btn:disabled {
@@ -201,6 +227,7 @@
         }
     </style>
 </head>
+
 <body data-theme="romance">
     <header>
         <a href="./index.html" class="home-btn">← Home</a>
@@ -270,14 +297,15 @@
     </main>
 
     <footer>
-        © 2025 Geovani Santos • Instagram: <a href="https://instagram.com/geovanikeeper" target="_blank">@geovanikeeper</a>
+        © 2025 Geovani Santos • Instagram: <a href="https://instagram.com/geovanikeeper"
+            target="_blank">@geovanikeeper</a>
     </footer>
 
     <script>
         const imageContainer = document.getElementById('imageContainer');
         const sortearBtn = document.getElementById('sortearBtn');
         const placeholder = document.querySelector('.placeholder');
-        
+
         // Pega todas as imagens da lista no HTML
         const imageList = document.getElementById('imageList');
         const images = Array.from(imageList.querySelectorAll('img')).map(img => img.src);
@@ -321,4 +349,5 @@
         });
     </script>
 </body>
+
 </html>

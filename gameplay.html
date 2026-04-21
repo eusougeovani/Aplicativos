@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,6 +12,23 @@
       padding: 0;
       box-sizing: border-box;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      /* Fundo e superfícies */
+      background: var(--bg-surface);
+      background: var(--gradient-brand);
+
+      /* Texto */
+      color: var(--txt-heading);
+      color: var(--txt-muted);
+
+      /* Botão/ação com sombra na cor do tema */
+      box-shadow: var(--shadow-primary);
+
+      /* Espaçamento consistente */
+      padding: var(--space-4);
+      gap: var(--space-3);
+
+      /* Focus ring no tema ativo */
+      box-shadow: var(--focus-ring);
     }
 
     body {
@@ -29,7 +47,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
     .home-btn {
@@ -71,7 +89,8 @@
       margin-bottom: 20px;
     }
 
-    select, .controls button {
+    select,
+    .controls button {
       padding: 12px 20px;
       font-size: 1rem;
       border: 2px solid rgba(255, 255, 255, 0.3);
@@ -84,7 +103,8 @@
       transition: all 0.3s ease;
     }
 
-    select:focus, .controls button:hover {
+    select:focus,
+    .controls button:hover {
       background: rgba(255, 255, 255, 0.3);
       transform: translateY(-2px);
       outline: none;
@@ -140,7 +160,7 @@
       cursor: pointer;
       border-radius: 10px;
       transition: all 0.3s ease;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
       font-weight: bold;
     }
 
@@ -163,7 +183,7 @@
       border-radius: 15px;
       cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
 
     .simon-btn:hover {
@@ -285,6 +305,7 @@
     }
   </style>
 </head>
+
 <body data-theme="jogos">
   <header>
     <a href="./index.html" class="home-btn">← Home</a>
@@ -334,22 +355,22 @@
               state.board[i] = state.current;
               cell.textContent = state.current;
               cell.style.color = state.current === 'X' ? '#667eea' : '#764ba2';
-              
-              const linhas = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+
+              const linhas = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
               for (let linha of linhas) {
-                const [a,b,c] = linha;
+                const [a, b, c] = linha;
                 if (state.board[a] && state.board[a] === state.board[b] && state.board[a] === state.board[c]) {
                   state.winner = state.board[a];
                   scoreboard.textContent = `🎉 Jogador ${state.winner} venceu!`;
                   return;
                 }
               }
-              
+
               if (!state.board.includes(null)) {
                 scoreboard.textContent = '🤝 Empate!';
                 return;
               }
-              
+
               state.current = state.current === 'X' ? 'O' : 'X';
               scoreboard.textContent = 'Vez do jogador ' + state.current;
             }
@@ -357,7 +378,7 @@
           grid.appendChild(cell);
         }
       },
-      
+
       forca() {
         const palavras = ['banana', 'cachorro', 'escola', 'teclado', 'computador', 'javascript', 'programar', 'internet'];
         const palavra = palavras[Math.floor(Math.random() * palavras.length)];
@@ -370,7 +391,7 @@
             e.target.value = '';
             return;
           }
-          
+
           state.letrasUsadas.push(letra);
           let mudou = false;
           for (let i = 0; i < state.palavra.length; i++) {
@@ -379,14 +400,14 @@
               mudou = true;
             }
           }
-          
+
           if (!mudou) state.erros++;
-          
+
           scoreboard.textContent = 'Erros: ' + state.erros + ' / 6';
           container.querySelector('p').textContent = state.acertos.join(' ');
           document.getElementById('letras-usadas').textContent = 'Letras usadas: ' + state.letrasUsadas.join(', ');
           e.target.value = '';
-          
+
           if (state.erros >= 6) {
             setTimeout(() => {
               alert('Você perdeu! A palavra era: ' + state.palavra);
@@ -410,7 +431,7 @@
         window.verificarNumero = () => {
           const palpite = parseInt(document.getElementById('numero-input').value);
           if (isNaN(palpite)) return;
-          
+
           state.tentativas++;
           const resultado = document.getElementById('resultado');
           if (palpite === state.alvo) {
@@ -431,15 +452,15 @@
       ppt() {
         state = { player: 0, cpu: 0 };
         scoreboard.textContent = 'Você: 0 - Computador: 0';
-        container.innerHTML = '<div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">' + 
-          ['🪨 Pedra', '📄 Papel', '✂️ Tesoura'].map((j, idx) => 
+        container.innerHTML = '<div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">' +
+          ['🪨 Pedra', '📄 Papel', '✂️ Tesoura'].map((j, idx) =>
             `<button onclick="jogarPPT(${idx})">${j}</button>`
           ).join('') + '</div><p id="ppt-resultado" style="text-align: center; font-size: 1.2rem; margin-top: 20px;"></p>';
         window.jogarPPT = (escolha) => {
           const opcoes = ['Pedra', 'Papel', 'Tesoura'];
           const cpu = Math.floor(Math.random() * 3);
           const resultado = document.getElementById('ppt-resultado');
-          
+
           if (escolha === cpu) {
             resultado.textContent = `Empate! Ambos escolheram ${opcoes[escolha]}`;
             resultado.style.color = '#333';
@@ -457,7 +478,7 @@
       },
 
       memoria() {
-        const emojis = ['🇧🇷','🇫🇷','🇯🇵','🇨🇦','🇩🇪','🇮🇹','🇪🇸','🇬🇧'];
+        const emojis = ['🇧🇷', '🇫🇷', '🇯🇵', '🇨🇦', '🇩🇪', '🇮🇹', '🇪🇸', '🇬🇧'];
         let cards = emojis.concat(emojis).sort(() => 0.5 - Math.random());
         state = { flipped: [], matched: 0 };
         scoreboard.textContent = 'Pares encontrados: 0 / 8';
@@ -470,12 +491,12 @@
           div.addEventListener('click', () => flipMemoria(div));
           grid.appendChild(div);
         });
-        
+
         window.flipMemoria = (div) => {
           if (state.flipped.length < 2 && !div.textContent && !div.classList.contains('matched')) {
             div.textContent = div.dataset.valor;
             state.flipped.push(div);
-            
+
             if (state.flipped.length === 2) {
               const [a, b] = state.flipped;
               if (a.dataset.valor === b.dataset.valor) {
@@ -488,9 +509,9 @@
                   setTimeout(() => alert('Parabéns! Você completou o jogo!'), 300);
                 }
               } else {
-                setTimeout(() => { 
-                  a.textContent = ''; 
-                  b.textContent = ''; 
+                setTimeout(() => {
+                  a.textContent = '';
+                  b.textContent = '';
                   state.flipped = [];
                 }, 1000);
               }
@@ -529,7 +550,7 @@
         state = { perguntas, atual: 0, pontos: 0 };
         scoreboard.textContent = `Pontos: 0 / ${perguntas.length}`;
         mostrarPergunta();
-        
+
         window.responderQuiz = (idx) => {
           if (idx === state.perguntas[state.atual].c) {
             state.pontos++;
@@ -548,11 +569,11 @@
         const tamanho = 20;
         const largura = 15;
         const altura = 15;
-        state = { 
-          cobra: [{x: 7, y: 7}], 
-          direcao: {x: 1, y: 0},
-          proximaDirecao: {x: 1, y: 0},
-          comida: {x: 10, y: 10},
+        state = {
+          cobra: [{ x: 7, y: 7 }],
+          direcao: { x: 1, y: 0 },
+          proximaDirecao: { x: 1, y: 0 },
+          comida: { x: 10, y: 10 },
           pontos: 0,
           jogando: true,
           loop: null
@@ -561,16 +582,16 @@
         container.innerHTML = '<canvas id="snake-canvas" width="300" height="300" style="border: 2px solid #667eea; border-radius: 10px; background: #f8f9fa;"></canvas><p style="text-align: center; margin-top: 10px; color: #666;">Use as setas do teclado para jogar</p>';
         const canvas = document.getElementById('snake-canvas');
         const ctx = canvas.getContext('2d');
-        
+
         const teclaHandler = (e) => {
           if (!state.jogando) return;
-          const teclas = { 
-            ArrowUp: {x:0,y:-1}, 
-            ArrowDown: {x:0,y:1}, 
-            ArrowLeft: {x:-1,y:0}, 
-            ArrowRight: {x:1,y:0} 
+          const teclas = {
+            ArrowUp: { x: 0, y: -1 },
+            ArrowDown: { x: 0, y: 1 },
+            ArrowLeft: { x: -1, y: 0 },
+            ArrowRight: { x: 1, y: 0 }
           };
-          
+
           if (teclas[e.key]) {
             e.preventDefault();
             const novaDirecao = teclas[e.key];
@@ -579,50 +600,50 @@
             }
           }
         };
-        
+
         document.addEventListener('keydown', teclaHandler);
-        
+
         state.loop = setInterval(() => {
           if (!state.jogando) {
             clearInterval(state.loop);
             document.removeEventListener('keydown', teclaHandler);
             return;
           }
-          
+
           state.direcao = state.proximaDirecao;
-          const cabeca = { 
-            x: state.cobra[0].x + state.direcao.x, 
-            y: state.cobra[0].y + state.direcao.y 
+          const cabeca = {
+            x: state.cobra[0].x + state.direcao.x,
+            y: state.cobra[0].y + state.direcao.y
           };
-          
-          if (cabeca.x < 0 || cabeca.x >= largura || cabeca.y < 0 || cabeca.y >= altura || 
-              state.cobra.some(s => s.x === cabeca.x && s.y === cabeca.y)) {
+
+          if (cabeca.x < 0 || cabeca.x >= largura || cabeca.y < 0 || cabeca.y >= altura ||
+            state.cobra.some(s => s.x === cabeca.x && s.y === cabeca.y)) {
             state.jogando = false;
             alert(`Game Over! Pontos: ${state.pontos}`);
             return;
           }
-          
+
           state.cobra.unshift(cabeca);
-          
+
           if (cabeca.x === state.comida.x && cabeca.y === state.comida.y) {
             state.pontos++;
             scoreboard.textContent = `Pontos: ${state.pontos}`;
-            
+
             let novaComida;
             do {
-              novaComida = { 
-                x: Math.floor(Math.random() * largura), 
-                y: Math.floor(Math.random() * altura) 
+              novaComida = {
+                x: Math.floor(Math.random() * largura),
+                y: Math.floor(Math.random() * altura)
               };
             } while (state.cobra.some(s => s.x === novaComida.x && s.y === novaComida.y));
             state.comida = novaComida;
           } else {
             state.cobra.pop();
           }
-          
+
           ctx.fillStyle = '#f8f9fa';
           ctx.fillRect(0, 0, 300, 300);
-          
+
           ctx.fillStyle = '#667eea';
           state.cobra.forEach((s, i) => {
             if (i === 0) {
@@ -632,7 +653,7 @@
             }
             ctx.fillRect(s.x * tamanho, s.y * tamanho, tamanho - 2, tamanho - 2);
           });
-          
+
           ctx.fillStyle = '#e74c3c';
           ctx.fillRect(state.comida.x * tamanho, state.comida.y * tamanho, tamanho - 2, tamanho - 2);
         }, 150);
@@ -667,7 +688,7 @@
 
     function cliqueSimon(cor) {
       if (state.aguardando || state.resposta.length === 0) return;
-      
+
       if (cor === state.resposta[0]) {
         state.resposta.shift();
         if (state.resposta.length === 0) {
@@ -692,7 +713,7 @@
     document.getElementById('game-select').addEventListener('change', (e) => {
       const jogo = e.target.value;
       if (state.loop) clearInterval(state.loop);
-      
+
       if (jogos[jogo]) {
         jogos[jogo]();
       } else {
@@ -704,11 +725,12 @@
     function reiniciarJogo() {
       const jogoAtual = document.getElementById('game-select').value;
       if (state.loop) clearInterval(state.loop);
-      
+
       if (jogos[jogoAtual]) {
         jogos[jogoAtual]();
       }
     }
   </script>
 </body>
+
 </html>

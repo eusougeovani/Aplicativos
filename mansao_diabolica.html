@@ -1,11 +1,32 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>A Mansão Diabólica - Ficha</title>
     <link rel="stylesheet" href="global.css">
     <style>
+        * {
+            /* Fundo e superfícies */
+            background: var(--bg-surface);
+            background: var(--gradient-brand);
+
+            /* Texto */
+            color: var(--txt-heading);
+            color: var(--txt-muted);
+
+            /* Botão/ação com sombra na cor do tema */
+            box-shadow: var(--shadow-primary);
+
+            /* Espaçamento consistente */
+            padding: var(--space-4);
+            gap: var(--space-3);
+
+            /* Focus ring no tema ativo */
+            box-shadow: var(--focus-ring);
+        }
+
         :root {
             --bg: #121212;
             --surface: #1e1e1e;
@@ -52,6 +73,7 @@
                 grid-template-columns: 1fr;
                 gap: 15px;
             }
+
             body {
                 padding: 10px;
             }
@@ -60,9 +82,10 @@
         .card {
             background-color: var(--surface);
             padding: 15px;
-            border-radius: 12px; /* Bordas mais suaves para mobile */
+            border-radius: 12px;
+            /* Bordas mais suaves para mobile */
             border: 1px solid var(--border);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
 
         /* Área de Dados */
@@ -92,7 +115,7 @@
             transition: opacity 0.2s;
             flex: 1;
             /* Melhoria de feedback tátil */
-            touch-action: manipulation; 
+            touch-action: manipulation;
         }
 
         .btn:active {
@@ -206,14 +229,17 @@
         /* Monstros */
         .input-group {
             display: flex;
-            flex-wrap: wrap; /* Permite quebrar linha se não couber */
+            flex-wrap: wrap;
+            /* Permite quebrar linha se não couber */
             gap: 8px;
             margin-bottom: 15px;
         }
 
         .input-group input {
-            flex: 1 1 30%; /* Ocupa espaço flexível */
-            min-width: 60px; /* Evita que o campo de força/perícia suma */
+            flex: 1 1 30%;
+            /* Ocupa espaço flexível */
+            min-width: 60px;
+            /* Evita que o campo de força/perícia suma */
             padding: 12px 10px;
             background: #2a2a2a;
             color: #fff;
@@ -223,7 +249,8 @@
         }
 
         .input-group input[id="monstro-nome"] {
-            flex: 1 1 100%; /* Nome do monstro ocupa a linha toda no mobile se quebrar */
+            flex: 1 1 100%;
+            /* Nome do monstro ocupa a linha toda no mobile se quebrar */
         }
 
         .input-group .btn {
@@ -234,6 +261,7 @@
             .input-group input[id="monstro-nome"] {
                 flex: 2;
             }
+
             .input-group .btn {
                 flex: 0.5;
             }
@@ -245,7 +273,8 @@
             border-radius: 8px;
             margin-bottom: 10px;
             display: flex;
-            flex-direction: column; /* Empilha as informações no mobile */
+            flex-direction: column;
+            /* Empilha as informações no mobile */
             gap: 10px;
             border-left: 4px solid var(--primary);
         }
@@ -268,7 +297,7 @@
             padding: 3px 8px;
             border-radius: 4px;
         }
-        
+
         .monster-actions {
             display: flex;
             align-items: center;
@@ -285,16 +314,17 @@
         }
     </style>
 </head>
+
 <body data-theme="terror">
 
     <h1>A Mansão Diabólica</h1>
 
     <div class="container">
-        
+
         <div class="column">
             <div class="card">
                 <h2>Aventureiro</h2>
-                
+
                 <div class="dice-area">
                     <div class="dice-buttons">
                         <button class="btn" onclick="rolarDados(1)">1D6</button>
@@ -349,7 +379,7 @@
 
                 <button class="btn btn-generate" onclick="gerarAtributosIniciais()">Gerar Atributos Iniciais</button>
             </div>
-            
+
             <div class="card" style="margin-top: 15px;">
                 <h2>Equipamento e Armas</h2>
                 <textarea id="equipamentos" placeholder="Anote aqui seus itens, armas e bônus adquiridos..."></textarea>
@@ -359,21 +389,23 @@
         <div class="column">
             <div class="card">
                 <h2>Combate</h2>
-                
+
                 <div class="input-group">
                     <input type="text" id="monstro-nome" placeholder="Nome do Monstro">
-                    <input type="number" id="monstro-pericia" placeholder="Perícia" pattern="[0-9]*" inputmode="numeric">
+                    <input type="number" id="monstro-pericia" placeholder="Perícia" pattern="[0-9]*"
+                        inputmode="numeric">
                     <input type="number" id="monstro-forca" placeholder="Força" pattern="[0-9]*" inputmode="numeric">
                     <button class="btn" onclick="adicionarMonstro()">Adicionar</button>
                 </div>
 
                 <div id="lista-monstros">
-                    </div>
+                </div>
             </div>
 
             <div class="card" style="margin-top: 15px;">
                 <h2>Notas & Mapa</h2>
-                <textarea id="notas" placeholder="Anote senhas, dicas, caminhos mapeados e detalhes da exploração..." style="height: 250px;"></textarea>
+                <textarea id="notas" placeholder="Anote senhas, dicas, caminhos mapeados e detalhes da exploração..."
+                    style="height: 250px;"></textarea>
             </div>
         </div>
 
@@ -383,7 +415,7 @@
         function rolar(qtd) {
             let total = 0;
             let rolagens = [];
-            for(let i=0; i<qtd; i++) {
+            for (let i = 0; i < qtd; i++) {
                 let d = Math.floor(Math.random() * 6) + 1;
                 total += d;
                 rolagens.push(d);
@@ -394,7 +426,7 @@
         function rolarDados(qtd) {
             const res = rolar(qtd);
             const text = qtd === 1 ? `🎲 ${res.total}` : `🎲 ${res.total} (${res.rolagens.join(' + ')})`;
-            
+
             // Efeito visual rápido para indicar que rolou
             const display = document.getElementById('dice-result');
             display.style.opacity = '0.5';
@@ -411,7 +443,7 @@
         }
 
         function gerarAtributosIniciais() {
-            if(!confirm("Gerar novos atributos apagará os atuais. Continuar?")) return;
+            if (!confirm("Gerar novos atributos apagará os atuais. Continuar?")) return;
 
             let perIni = rolar(1).total + 6;
             document.getElementById('max-pericia').innerText = perIni;
@@ -439,10 +471,10 @@
             const pericia = document.getElementById('monstro-pericia').value || 0;
             const forca = document.getElementById('monstro-forca').value || 0;
 
-            if(forca == 0 && pericia == 0 && nome === "Criatura") return; 
+            if (forca == 0 && pericia == 0 && nome === "Criatura") return;
 
             const id = `monster-${monsterIdCounter++}`;
-            
+
             const html = `
                 <div class="monster-item" id="${id}">
                     <div class="monster-info">
@@ -462,7 +494,7 @@
             `;
 
             document.getElementById('lista-monstros').insertAdjacentHTML('afterbegin', html);
-            
+
             document.getElementById('monstro-nome').value = '';
             document.getElementById('monstro-pericia').value = '';
             document.getElementById('monstro-forca').value = '';
@@ -479,4 +511,5 @@
         }
     </script>
 </body>
+
 </html>
