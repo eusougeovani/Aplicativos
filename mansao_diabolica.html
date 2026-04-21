@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Mansão Diabólica - Ficha de Aventura</title>
+    <style>
+        :root {
+            --bg: #121212;
+            --surface: #1e1e1e;
+            --primary: #cf000f; /* Vermelho sangue para combinar com o tema */
+            --text: #e0e0e0;
+            --border: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--surface);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+        }
+
+        /* Área de Dados */
+        .dice-area {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 1.2rem;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #dice-result {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 10px;
+            min-height: 35px;
+        }
+
+        /* Atributos */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .stat-box {
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            width: 40px;
+        }
+
+        .stat-sub {
+            font-size: 0.85rem;
+            color: #aaa;
+            cursor: text; /* Indica que é editável */
+        }
+
+        .stat-note {
+            font-size: 0.7rem;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .btn-generate {
+            width: 100%;
+            margin-top: 15px;
+            background-color: #444;
+        }
+
+        /* Textareas para Equipamento e Notas */
+        textarea {
+            width: 100%;
+            height: 120px;
+            background: #2a2a2a;
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 10px;
+            box-sizing: border-box;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        /* Monstros */
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 8px;
+            background: #2a2a2a;
+            color: #fff;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+        }
+
+        .input-group input[type="number"] {
+            flex: 0.5;
+        }
+
+        .monster-item {
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid var(--primary);
+        }
+
+        .monster-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .monster-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .monster-stats {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        
+        .monster-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>A Mansão Diabólica</h1>
+
+    <div class="container">
+        
+        <div class="column">
+            <div class="card">
+                <h2>Aventureiro</h2>
+                
+                <div class="dice-area">
+                    <button class="btn" onclick="rolarDados(1)">Rolar 1D6</button>
+                    <button class="btn" onclick="rolarDados(2)">Rolar 2D6</button>
+                    <div id="dice-result">-</div>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-box">
+                        <div class="stat-title">Perícia</div>
+                        <div class="stat-controls">
+                            <button class="btn btn-small" onclick="alterarAtributo('pericia', -1)">-</button>
+                            <span id="val-pericia" class="stat-value">0</span>
+                            <button class="btn btn-small" onclick="alterarAtributo('pericia', 1)">+</button>
+                        </div>
+                        <div class="stat-sub">Inicial: <span id="max-pericia" contenteditable="true">0</span></div>
+                        <div class="stat-note">(Partida: Inicial - 3)</div>
+                    </div>
+
+                    <div class="stat-box">
+                        <div class="stat-title">Força</div>
+                        <div class="stat-controls">
+                            <button class="btn btn-small" onclick="alterarAtributo('forca', -1)">-</button>
+                            <span id="val-forca" class="stat-value">0</span>
+                            <button class="btn btn-small" onclick="alterarAtributo('forca', 1)">+</button>
+                        </div>
+                        <div class="stat-sub">Inicial: <span id="max-forca" contenteditable="true">0</span></div>
+                    </div>
+
+                    <div class="stat-box">
+                        <div class="stat-title">Sorte</div>
+                        <div class="stat-controls">
+                            <button class="btn btn-small" onclick="alterarAtributo('sorte', -1)">-</button>
+                            <span id="val-sorte" class="stat-value">0</span>
+                            <button class="btn btn-small" onclick="alterarAtributo('sorte', 1)">+</button>
+                        </div>
+                        <div class="stat-sub">Inicial: <span id="max-sorte" contenteditable="true">0</span></div>
+                    </div>
+
+                    <div class="stat-box">
+                        <div class="stat-title">Medo</div>
+                        <div class="stat-controls">
+                            <button class="btn btn-small" onclick="alterarAtributo('medo', -1)">-</button>
+                            <span id="val-medo" class="stat-value">0</span>
+                            <button class="btn btn-small" onclick="alterarAtributo('medo', 1)">+</button>
+                        </div>
+                        <div class="stat-sub">Máximo: <span id="max-medo" contenteditable="true">0</span></div>
+                        <div class="stat-note">(Se atingir o máximo, você morre)</div>
+                    </div>
+                </div>
+
+                <button class="btn btn-generate" onclick="gerarAtributosIniciais()">Gerar Atributos Iniciais</button>
+            </div>
+            
+            <div class="card" style="margin-top: 20px;">
+                <h2>Equipamento e Armas</h2>
+                <textarea id="equipamentos" placeholder="Anote aqui seus itens, armas e bônus de perícia adquiridos..."></textarea>
+            </div>
+        </div>
+
+        <div class="column">
+            <div class="card">
+                <h2>Encontros com Monstros</h2>
+                
+                <div class="input-group">
+                    <input type="text" id="monstro-nome" placeholder="Nome do Monstro">
+                    <input type="number" id="monstro-pericia" placeholder="Perícia">
+                    <input type="number" id="monstro-forca" placeholder="Força">
+                    <button class="btn" onclick="adicionarMonstro()">Add</button>
+                </div>
+
+                <div id="lista-monstros">
+                    </div>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <h2>Notas & Mapa</h2>
+                <textarea id="notas" placeholder="Anote senhas, dicas, números de salas ou caminhos mapeados..." style="height: 250px;"></textarea>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Função de rolagem de dados
+        function rolar(qtd) {
+            let total = 0;
+            let rolagens = [];
+            for(let i=0; i<qtd; i++) {
+                let d = Math.floor(Math.random() * 6) + 1;
+                total += d;
+                rolagens.push(d);
+            }
+            return { total, rolagens };
+        }
+
+        // Interface do dado
+        function rolarDados(qtd) {
+            const res = rolar(qtd);
+            const text = qtd === 1 ? `Resultado: ${res.total}` : `Resultado: ${res.total} (${res.rolagens.join(' + ')})`;
+            document.getElementById('dice-result').innerText = text;
+        }
+
+        // Alterar atributos na ficha
+        function alterarAtributo(attr, valor) {
+            const el = document.getElementById(`val-${attr}`);
+            let atual = parseInt(el.innerText) || 0;
+            el.innerText = atual + valor;
+        }
+
+        // Regras de criação da Mansão Diabólica
+        function gerarAtributosIniciais() {
+            if(!confirm("Isso irá sobrescrever seus atributos atuais. Tem certeza?")) return;
+
+            // Perícia: 1d6 + 6 (Partida é Inicial - 3)
+            let perIni = rolar(1).total + 6;
+            document.getElementById('max-pericia').innerText = perIni;
+            document.getElementById('val-pericia').innerText = perIni - 3;
+
+            // Força: 2d6 + 12
+            let forIni = rolar(2).total + 12;
+            document.getElementById('max-forca').innerText = forIni;
+            document.getElementById('val-forca').innerText = forIni;
+
+            // Sorte: 1d6 + 6
+            let sorIni = rolar(1).total + 6;
+            document.getElementById('max-sorte').innerText = sorIni;
+            document.getElementById('val-sorte').innerText = sorIni;
+
+            // Medo: Máximo 1d6 + 6, começa em 0
+            let medoMax = rolar(1).total + 6;
+            document.getElementById('max-medo').innerText = medoMax;
+            document.getElementById('val-medo').innerText = 0;
+
+            document.getElementById('dice-result').innerText = "Atributos Gerados!";
+        }
+
+        // Gerenciamento de Monstros
+        let monsterIdCounter = 0;
+
+        function adicionarMonstro() {
+            const nome = document.getElementById('monstro-nome').value || "Criatura";
+            const pericia = document.getElementById('monstro-pericia').value || 0;
+            const forca = document.getElementById('monstro-forca').value || 0;
+
+            if(forca == 0 && pericia == 0) return; // Evita add vazio sem querer
+
+            const id = `monster-${monsterIdCounter++}`;
+            
+            const html = `
+                <div class="monster-item" id="${id}">
+                    <div class="monster-info">
+                        <span class="monster-name">${nome}</span>
+                        <span class="monster-stats">Perícia: ${pericia}</span>
+                    </div>
+                    <div class="monster-actions">
+                        <span style="font-size: 0.8rem; color: #aaa;">Força:</span>
+                        <button class="btn btn-small" onclick="alterarForcaMonstro('${id}', -1)">-</button>
+                        <span id="forca-${id}" class="stat-value" style="font-size: 1.2rem; width: 25px;">${forca}</span>
+                        <button class="btn btn-small" onclick="alterarForcaMonstro('${id}', 1)">+</button>
+                        <button class="btn" style="background-color: #555; padding: 5px 10px; margin-left: 10px;" onclick="removerMonstro('${id}')">X</button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('lista-monstros').insertAdjacentHTML('beforeend', html);
+            
+            // Limpa inputs
+            document.getElementById('monstro-nome').value = '';
+            document.getElementById('monstro-pericia').value = '';
+            document.getElementById('monstro-forca').value = '';
+        }
+
+        function alterarForcaMonstro(id, valor) {
+            const el = document.getElementById(`forca-${id}`);
+            let atual = parseInt(el.innerText) || 0;
+            el.innerText = atual + valor;
+        }
+
+        function removerMonstro(id) {
+            document.getElementById(id).remove();
+        }
+    </script>
+</body>
+</html>
